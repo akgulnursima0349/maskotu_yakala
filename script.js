@@ -1139,7 +1139,23 @@ class Pipe {
         this.balls = [];
         this.animalCount = 14;
 
-        this.updatePosition(); // Initial position and dimensions
+        // Güvenli varsayılanlar (updatePosition ile güncellenecek)
+        this.x = canvasWidth ? canvasWidth * 0.88 : 800;
+        this.pipeWidth = 95;
+        this.capWidth = 115;
+        this.ovalRingWidth = 125;
+        this.animalSize = 75;
+        this.animalSpacing = 70;
+        this.upperHeight = 240;
+        this.midHeight = 100;
+        this.lowerHeight = 220;
+
+        this.gap1Start = 0;
+        this.gap1End = 0;
+        this.gap2Start = 0;
+        this.gap2End = 0;
+
+        this.updatePosition();
     }
 
     updatePosition() {
@@ -1954,10 +1970,10 @@ function drawBackground() {
     // Arka plan görseli - "Cover" mantığıyla sığdır (yakınlaştır)
     if (ASSETS.images.background) {
         const img = ASSETS.images.background;
-        const imgRatio = img.width / img.height;
-        const canvasRatio = canvasWidth / canvasHeight;
+        const imgRatio = img.width / img.height || 16 / 9;
+        const canvasRatio = (canvasWidth / canvasHeight) || 1;
 
-        let drawW, drawH, drawX, drawY;
+        let drawW = canvasWidth, drawH = canvasHeight, drawX = 0, drawY = 0;
 
         if (canvasRatio > imgRatio) {
             drawW = canvasWidth;
