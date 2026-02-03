@@ -668,8 +668,8 @@ class Gun {
         this.pivotX = canvasWidth * xOffset;
 
         // Sabit piksel yerine ekranın yüzdesiyle konumlandır (Zemine yapışması için)
-        // Arka plandaki çimen yaklaşık %75-%80 bandında
-        this.pivotY = canvasHeight * 0.78;
+        // Mobilde biraz daha yukarı kaldırıldı (0.78 -> 0.74)
+        this.pivotY = isMobile ? canvasHeight * 0.74 : canvasHeight * 0.80;
     }
 
     update() {
@@ -1185,7 +1185,7 @@ class Pipe {
 
         // Yükseklik limitleri
         const uHeight = 350;
-        const lHeight = isMobile ? 380 : 500; // PC'de tüpü yere kadar uzat
+        const lHeight = isMobile ? 380 : 420; // PC'de tüpü biraz kısalttık (500 -> 420)
 
         this.upperHeight = uHeight * gameScale;
         this.midHeight = 100 * gameScale;
@@ -1207,7 +1207,7 @@ class Pipe {
         // Y pozisyonları
         // Mobilde tüpü biraz daha aşağıdan başlat
         const isMobile = window.innerWidth < 768;
-        const yOffset = isMobile ? 20 : -100; // PC'de biraz daha yukarı çektik
+        const yOffset = isMobile ? 20 : -80; // PC'de biraz aşağı kaydırdık (-100 -> -80) ortalamak için
         const upperY = yOffset * gameScale;
 
         // Alt tüp sayfanın EN ALTINA yapışık
