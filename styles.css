@@ -1,0 +1,933 @@
+/* ==================== GENEL STİLLER ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    overflow: hidden;
+    background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 100%);
+    min-height: 100vh;
+}
+
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ==================== GİRİŞ EKRANI ==================== */
+#intro-screen {
+    background: linear-gradient(180deg, #87CEEB 0%, #7CB342 100%);
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.intro-container {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    height: 85%;
+    z-index: 10;
+    gap: 40px;
+    align-items: center;
+}
+
+/* Sol Taraf - Kurallar */
+.intro-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    /* Gap artırıldı, kurallar aşağı kayar */
+}
+
+.rules-box {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 4px solid #FFD700;
+    max-width: 380px;
+    transition: transform 0.3s ease;
+}
+
+.rules-box:hover {
+    transform: translateY(-5px);
+}
+
+.game-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 5rem;
+    /* Boyut büyütüldü */
+    color: #FF6B35;
+    text-align: center;
+    margin-bottom: 5px;
+    line-height: 1.1;
+    /* İki satır için ideal */
+    text-shadow: 4px 4px 0 #FFD700, 7px 7px 15px rgba(0, 0, 0, 0.15);
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.rules-list {
+    margin-bottom: 10px;
+}
+
+.rule-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #FFF9E6;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    border-left: 5px solid #4CAF50;
+}
+
+.rule-icon {
+    font-size: 1.5rem;
+}
+
+.points-info {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+    border-top: 3px dashed #FFD700;
+}
+
+.point-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.point-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.point-item span {
+    font-weight: 700;
+    color: #FF6B35;
+    font-size: 1.1rem;
+}
+
+/* Sağ Taraf - Animasyon ve Play */
+.intro-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-top: -60px;
+    /* Her ikisini birden yukarı kaldırdık */
+}
+
+.intro-animation {
+    position: relative;
+    width: 550px;
+    height: 450px;
+}
+
+#introCanvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+/* Play Butonu */
+.play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px 60px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: white;
+    background: linear-gradient(180deg, #FF6B35 0%, #E55A2B 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #B84420, 0 15px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease;
+    border: 4px solid #FFD700;
+}
+
+.play-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 11px 0 #B84420, 0 20px 35px rgba(0, 0, 0, 0.3);
+}
+
+.play-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 3px 0 #B84420, 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.play-icon {
+    font-size: 1.5rem;
+}
+
+/* Giriş Bulutları */
+.intro-clouds {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.intro-cloud {
+    position: absolute;
+    opacity: 0.8;
+    animation: cloudMove 20s linear infinite;
+}
+
+.cloud-1 {
+    top: 10%;
+    width: 150px;
+    animation-duration: 25s;
+}
+
+.cloud-2 {
+    top: 25%;
+    width: 120px;
+    animation-duration: 30s;
+    animation-delay: -10s;
+}
+
+.cloud-3 {
+    top: 5%;
+    width: 100px;
+    animation-duration: 35s;
+    animation-delay: -20s;
+}
+
+@keyframes cloudMove {
+    0% {
+        left: -200px;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+/* ==================== OYUN EKRANI ==================== */
+#game-screen {
+    position: relative;
+    background: #87CEEB;
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* ==================== TÜP YAPISI ==================== */
+/* Artık canvas ile çiziliyor - DOM container gizli */
+.pipe-wrapper {
+    display: none;
+}
+
+/* ==================== HAYVANLAR (TOPLAR) ==================== */
+.animal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85px;
+    height: 85px;
+    margin: -5px 0;
+    pointer-events: auto;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.animal img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.animal:hover img {
+    transform: scale(1.08);
+}
+
+.animal.caught {
+    transform: scale(1.15);
+    filter: brightness(1.2);
+}
+
+.animal.confused img {
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Yakalanan hayvan animasyonu - yukarı uçarak kaybolma */
+.animal.flying-away {
+    position: fixed !important;
+    z-index: 1000;
+    pointer-events: none;
+    animation: flyAway 1s ease-out forwards;
+}
+
+@keyframes flyAway {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.3) translateY(-100px);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(0.5) translateY(-300px);
+        opacity: 0;
+    }
+}
+
+/* Yeni hayvan giriş animasyonu */
+.animal-entering {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0) rotate(0);
+    }
+
+    20% {
+        transform: translateX(-6px) rotate(-8deg);
+    }
+
+    40% {
+        transform: translateX(6px) rotate(8deg);
+    }
+
+    60% {
+        transform: translateX(-4px) rotate(-5deg);
+    }
+
+    80% {
+        transform: translateX(4px) rotate(5deg);
+    }
+}
+
+.points-popup {
+    position: fixed;
+    font-family: 'Fredoka One', cursive;
+    font-size: 4.5rem;
+    color: #FFD700;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.7);
+    z-index: 2000;
+    pointer-events: none;
+    animation: pointsFloat 3.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    white-space: nowrap;
+}
+
+.points-popup.bonus {
+    color: #FF6B35;
+    font-size: 4rem;
+}
+
+.points-popup .point-icon {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.4));
+}
+
+/* Kodla oluşturulan saat figürü */
+.clock-icon-custom {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: white;
+    border: 5px solid #333;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.clock-icon-custom::before,
+.clock-icon-custom::after {
+    content: '';
+    position: absolute;
+    background: #333;
+    left: 50%;
+    top: 50%;
+    transform-origin: bottom center;
+    border-radius: 2px;
+}
+
+/* Akrep */
+.clock-icon-custom::before {
+    width: 4px;
+    height: 18px;
+    margin-left: -2px;
+    margin-top: -18px;
+    transform: rotate(45deg);
+}
+
+/* Yelkovan */
+.clock-icon-custom::after {
+    width: 3px;
+    height: 24px;
+    margin-left: -1.5px;
+    margin-top: -24px;
+    transform: rotate(0deg);
+    animation: clockSpin 2s linear infinite;
+}
+
+@keyframes clockSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pointsFloat {
+    0% {
+        transform: translate(-50%, 0) scale(0.5);
+        opacity: 0;
+    }
+
+    15% {
+        transform: translate(-50%, -60px) scale(1.4);
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -600px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* Göz kırpma animasyonu için */
+@keyframes blink {
+
+    0%,
+    90%,
+    100% {
+        opacity: 1;
+    }
+
+    95% {
+        opacity: 0.8;
+    }
+}
+
+/* UI Overlay */
+#game-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.score-chart {
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+.chart-bg {
+    width: 180px;
+    height: auto;
+}
+
+.top-center-ui {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+}
+
+.level-display,
+.score-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 3px solid #FFD700;
+}
+
+.ui-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.level-display span,
+.score-display span {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #FF6B35;
+}
+
+/* ==================== MODAL STİLLERİ ==================== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#game-screen {
+    background: url('game/background.png') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 5px solid #FFD700;
+    animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Soru Modal */
+.question-content {
+    text-align: center;
+}
+
+.timer-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.timer-capsule {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 260px;
+}
+
+.timer-bg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.timer-fill-container {
+    position: absolute;
+    top: 50%;
+    left: 32%;
+    right: 10%;
+    height: 18%;
+    transform: translateY(-50%);
+    background: rgba(200, 200, 200, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    border-radius: 12px;
+    transition: width 0.1s linear;
+}
+
+.timer-bar.warning {
+    background: linear-gradient(90deg, #FF9800, #FFC107);
+}
+
+.timer-bar.danger {
+    background: linear-gradient(90deg, #F44336, #FF5722);
+    animation: pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+#timer-text {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: #FF6B35;
+    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+
+#question-container {
+    margin-bottom: 30px;
+}
+
+#question-image-container {
+    margin-bottom: 20px;
+}
+
+#question-image-container img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 15px;
+}
+
+#question-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+    line-height: 1.5;
+}
+
+#answers-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.answer-btn {
+    padding: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    background: #F5F5F5;
+    border: 3px solid #DDD;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.answer-btn:hover {
+    background: #E3F2FD;
+    border-color: #2196F3;
+    transform: translateY(-3px);
+}
+
+.answer-btn img {
+    max-width: 80px;
+    max-height: 60px;
+    object-fit: contain;
+}
+
+.answer-btn.correct {
+    background: #C8E6C9;
+    border-color: #4CAF50;
+}
+
+.answer-btn.wrong {
+    background: #FFCDD2;
+    border-color: #F44336;
+}
+
+.answer-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#feedback-container,
+#feedback-icon {
+    display: none !important;
+}
+
+#feedback-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Bitiş Modal */
+.end-content {
+    text-align: center;
+}
+
+.end-content h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    color: #FF6B35;
+    margin-bottom: 30px;
+}
+
+.final-score {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 30px;
+    background: linear-gradient(135deg, #FFD700, #FFA000);
+    border-radius: 20px;
+}
+
+.final-score span:first-child {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#final-score-value {
+    font-family: 'Fredoka One', cursive;
+    font-size: 4rem;
+    color: white;
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.final-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-item span:first-child {
+    font-size: 1rem;
+    color: #666;
+}
+
+.stat-item span:last-child {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: #4CAF50;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+/* Pipe Responsive */
+@media (max-width: 1200px) {
+    .pipe-ring img {
+        width: 95px;
+    }
+
+    .animal {
+        width: 68px;
+        height: 68px;
+        margin: -10px 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .pipe-wrapper {
+        right: 3%;
+    }
+
+    .pipe-ring img {
+        width: 80px;
+    }
+
+    .animal {
+        width: 58px;
+        height: 58px;
+        margin: -8px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .pipe-ring img {
+        width: 65px;
+    }
+
+    .animal {
+        width: 48px;
+        height: 48px;
+        margin: -6px 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .intro-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .rules-box {
+        padding: 25px;
+    }
+
+    .game-title {
+        font-size: 2rem;
+    }
+
+    .rule-item {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .intro-animation {
+        width: 380px;
+        height: 320px;
+    }
+
+    .play-btn {
+        padding: 15px 40px;
+        font-size: 1.5rem;
+    }
+
+    .top-center-ui {
+        flex-direction: column;
+        gap: 10px;
+        right: 20px;
+        left: auto;
+        transform: none;
+    }
+
+    .modal-content {
+        padding: 25px;
+        margin: 20px;
+    }
+
+    #question-text {
+        font-size: 1.2rem;
+    }
+
+    #answers-container {
+        grid-template-columns: 1fr;
+    }
+
+    .answer-btn {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    .game-title {
+        font-size: 1.6rem;
+    }
+
+    .rules-box {
+        padding: 20px;
+    }
+
+    .rule-item {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    .chart-bg {
+        width: 120px;
+    }
+
+    .level-display span,
+    .score-display span {
+        font-size: 1.2rem;
+    }
+
+    .ui-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    #final-score-value {
+        font-size: 3rem;
+    }
+}

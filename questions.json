@@ -1,0 +1,224 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "Hangi hayvan 'miyav' diye ses çıkarır?",
+      "image": null,
+      "answers": [
+        { "text": "Kedi", "image": null, "correct": true },
+        { "text": "Köpek", "image": null, "correct": false },
+        { "text": "Kuş", "image": null, "correct": false },
+        { "text": "Tavşan", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Gökkuşağında kaç renk vardır?",
+      "image": null,
+      "answers": [
+        { "text": "5", "image": null, "correct": false },
+        { "text": "7", "image": null, "correct": true },
+        { "text": "9", "image": null, "correct": false },
+        { "text": "3", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Hangi meyve sarı renklidir?",
+      "image": null,
+      "answers": [
+        { "text": "Elma", "image": null, "correct": false },
+        { "text": "Muz", "image": null, "correct": true },
+        { "text": "Üzüm", "image": null, "correct": false },
+        { "text": "Kiraz", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Bir yılda kaç ay vardır?",
+      "image": null,
+      "answers": [
+        { "text": "10", "image": null, "correct": false },
+        { "text": "11", "image": null, "correct": false },
+        { "text": "12", "image": null, "correct": true },
+        { "text": "13", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "Güneş hangi yönden doğar?",
+      "image": null,
+      "answers": [
+        { "text": "Batı", "image": null, "correct": false },
+        { "text": "Kuzey", "image": null, "correct": false },
+        { "text": "Güney", "image": null, "correct": false },
+        { "text": "Doğu", "image": null, "correct": true }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Hangi hayvan yumurtadan çıkar?",
+      "image": null,
+      "answers": [
+        { "text": "Köpek", "image": null, "correct": false },
+        { "text": "Kedi", "image": null, "correct": false },
+        { "text": "Civciv", "image": null, "correct": true },
+        { "text": "Tavşan", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "2 + 3 kaç eder?",
+      "image": null,
+      "answers": [
+        { "text": "4", "image": null, "correct": false },
+        { "text": "5", "image": null, "correct": true },
+        { "text": "6", "image": null, "correct": false },
+        { "text": "7", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "Hangi mevsimde kar yağar?",
+      "image": null,
+      "answers": [
+        { "text": "Yaz", "image": null, "correct": false },
+        { "text": "İlkbahar", "image": null, "correct": false },
+        { "text": "Sonbahar", "image": null, "correct": false },
+        { "text": "Kış", "image": null, "correct": true }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "Arılar ne üretir?",
+      "image": null,
+      "answers": [
+        { "text": "Süt", "image": null, "correct": false },
+        { "text": "Bal", "image": null, "correct": true },
+        { "text": "Yumurta", "image": null, "correct": false },
+        { "text": "Peynir", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "Bir haftada kaç gün vardır?",
+      "image": null,
+      "answers": [
+        { "text": "5", "image": null, "correct": false },
+        { "text": "6", "image": null, "correct": false },
+        { "text": "7", "image": null, "correct": true },
+        { "text": "8", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "Hangi gezegen 'Kızıl Gezegen' olarak bilinir?",
+      "image": null,
+      "answers": [
+        { "text": "Venüs", "image": null, "correct": false },
+        { "text": "Mars", "image": null, "correct": true },
+        { "text": "Jüpiter", "image": null, "correct": false },
+        { "text": "Satürn", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "Hangi hayvan 'hav hav' diye havlar?",
+      "image": null,
+      "answers": [
+        { "text": "Kedi", "image": null, "correct": false },
+        { "text": "Kuş", "image": null, "correct": false },
+        { "text": "Köpek", "image": null, "correct": true },
+        { "text": "Balık", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "Yapraklar hangi mevsimde döküler?",
+      "image": null,
+      "answers": [
+        { "text": "İlkbahar", "image": null, "correct": false },
+        { "text": "Yaz", "image": null, "correct": false },
+        { "text": "Sonbahar", "image": null, "correct": true },
+        { "text": "Kış", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "Suyun donma sıcaklığı kaç derecedir?",
+      "image": null,
+      "answers": [
+        { "text": "-10°C", "image": null, "correct": false },
+        { "text": "0°C", "image": null, "correct": true },
+        { "text": "10°C", "image": null, "correct": false },
+        { "text": "100°C", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "Hangi renk karıştırılırsa yeşil olur?",
+      "image": null,
+      "answers": [
+        { "text": "Kırmızı + Mavi", "image": null, "correct": false },
+        { "text": "Sarı + Mavi", "image": null, "correct": true },
+        { "text": "Kırmızı + Sarı", "image": null, "correct": false },
+        { "text": "Beyaz + Siyah", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "Bir üçgenin kaç köşesi vardır?",
+      "image": null,
+      "answers": [
+        { "text": "2", "image": null, "correct": false },
+        { "text": "3", "image": null, "correct": true },
+        { "text": "4", "image": null, "correct": false },
+        { "text": "5", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 17,
+      "text": "Hangi organ kalbi pompalar?",
+      "image": null,
+      "answers": [
+        { "text": "Beyin", "image": null, "correct": false },
+        { "text": "Akciğer", "image": null, "correct": false },
+        { "text": "Kalp", "image": null, "correct": true },
+        { "text": "Böbrek", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 18,
+      "text": "4 x 2 kaç eder?",
+      "image": null,
+      "answers": [
+        { "text": "6", "image": null, "correct": false },
+        { "text": "7", "image": null, "correct": false },
+        { "text": "8", "image": null, "correct": true },
+        { "text": "9", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 19,
+      "text": "Hangi hayvan suda yaşar?",
+      "image": null,
+      "answers": [
+        { "text": "Kedi", "image": null, "correct": false },
+        { "text": "Balık", "image": null, "correct": true },
+        { "text": "Kuş", "image": null, "correct": false },
+        { "text": "Tavşan", "image": null, "correct": false }
+      ]
+    },
+    {
+      "id": 20,
+      "text": "Türkiye'nin başkenti neresidir?",
+      "image": null,
+      "answers": [
+        { "text": "İstanbul", "image": null, "correct": false },
+        { "text": "Ankara", "image": null, "correct": true },
+        { "text": "İzmir", "image": null, "correct": false },
+        { "text": "Bursa", "image": null, "correct": false }
+      ]
+    }
+  ]
+}
