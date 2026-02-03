@@ -204,17 +204,25 @@ const GameState = {
 let canvas, ctx;
 let introCanvas, introCtx;
 let canvasWidth, canvasHeight;
+let gameScale = 1; // Global ölçek faktörü
+
+function getScale() {
+    // Referans genişlik 1920px kabul edilerek ölçek hesaplanır
+    // Mobil veya küçük ekranlarda öğelerin çok küçülmemesi için bir alt sınır (0.5) eklenebilir
+    return Math.max(window.innerWidth / 1920, 0.4);
+}
 
 function initCanvas() {
     canvas = document.getElementById('gameCanvas');
     ctx = canvas.getContext('2d');
 
-    // Intro canvas (genişletilmiş)
+    // Intro canvas (responsive yapıldı)
     introCanvas = document.getElementById('introCanvas');
     if (introCanvas) {
         introCtx = introCanvas.getContext('2d');
-        introCanvas.width = 550;
-        introCanvas.height = 450;
+        // CSS genişliği %100 ama internal resolution sabit tutulup draw'da scale edilecek
+        introCanvas.width = 800;
+        introCanvas.height = 600;
     }
 
     resizeCanvas();
@@ -226,6 +234,9 @@ function resizeCanvas() {
     canvasHeight = window.innerHeight;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
+
+    // Global ölçeği güncelle
+    gameScale = getScale();
 
     // Oyun nesnelerini yeniden konumlandır
     if (gun) gun.updatePosition();
@@ -294,7 +305,12 @@ class IntroAnimation {
         if (!introCtx) return;
 
         const ctx = introCtx;
-        ctx.clearRect(0, 0, 550, 450);
+        ctx.clearRect(0, 0, 800, 600); // initCanvas'taki yeni boyutlara göre
+
+        ctx.save();
+        // 550x450 orijinal çizimi 800x600'e sığdırmak için ölçeklendir
+        const iScale = 800 / 550;
+        ctx.scale(iScale, iScale);
 
         // Topları çiz (Sallanan ve Zıplayan)
         this.balls.forEach(ball => {
@@ -303,6 +319,7 @@ class IntroAnimation {
 
         // Catcher çiz (Sadece gövde, atış yok)
         this.drawCatcher(ctx);
+        ctx.restore();
     }
 
     drawBall(ctx, ball) {
@@ -451,8 +468,8 @@ class Cloud {
         this.y = y;
         this.speed = speed;
         this.scale = scale;
-        this.width = 150 * scale;
-        this.height = 80 * scale;
+        this.width = 150 * scale * gameScale;
+        this.height = 80 * scale * gameScale;
     }
 
     update() {
@@ -492,7 +509,7 @@ function initGroundAnimals() {
         type: 'rabbit',
         x: 0.05,
         y: 0.65,
-        size: 45,
+        size: 45 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000,
         isBlinking: false,
@@ -509,7 +526,7 @@ function initGroundAnimals() {
         type: 'cat',
         x: 0.12,
         y: 0.78,
-        size: 65,
+        size: 65 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 500,
         isBlinking: false,
@@ -526,7 +543,7 @@ function initGroundAnimals() {
         type: 'chicken',
         x: 0.30,
         y: 0.82,
-        size: 90,
+        size: 90 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 1000,
         isBlinking: false,
@@ -614,13 +631,11 @@ function drawGroundAnimals() {
 // Gövde + Pompa (kırmızı huni) SAĞDA + Bacak vidada
 class Gun {
     constructor() {
-        // Görsel boyutları (orijinal oranları koruyarak - catcher.png ~260x180)
-        this.catcherWidth = 180;
-        this.catcherHeight = 125;     // Orantılı (180 * 180/260 ≈ 125)
-        this.legWidth = 70;
-        this.legHeight = 50;
-        this.pumpWidth = 120;         // Kırmızı huni daha büyük
-        this.pumpHeight = 80;
+        // Görsel boyutları (temel değerler ölçekle çarpılacak)
+        this.baseCatcherWidth = 180;
+        this.baseCatcherHeight = 125;
+        this.baseLegWidth = 70;
+        this.baseLegHeight = 50;
 
         this.updatePosition();
         this.rotation = 0;
@@ -630,10 +645,15 @@ class Gun {
     }
 
     updatePosition() {
+        // Ölçeklendirilmiş boyutlar
+        this.catcherWidth = this.baseCatcherWidth * gameScale;
+        this.catcherHeight = this.baseCatcherHeight * gameScale;
+        this.legWidth = this.baseLegWidth * gameScale;
+        this.legHeight = this.baseLegHeight * gameScale;
+
         // Pivot noktası = vidanın olduğu yer
-        // Kulübenin önünde konumlandır
         this.pivotX = canvasWidth * 0.22;
-        this.pivotY = canvasHeight - 280;
+        this.pivotY = canvasHeight - (280 * gameScale); // 280px referans değeri ölçeklendirildi
     }
 
     update() {
@@ -680,31 +700,31 @@ class Gun {
         }
 
         // 4. Pompa - sadece plunger aktif değilken çiz
-        const pumpWidth = 80;
-        const pumpHeight = 55;
-        const ropeStartX = 78;
-        const ropeY = -12;
-        const pumpX = ropeStartX + 50;
-        const pumpY = -pumpHeight / 2 - 12;
+        const pWidth = 80 * gameScale;
+        const pHeight = 55 * gameScale;
+        const rStartX = 78 * gameScale;
+        const rY = -12 * gameScale;
+        const pX = rStartX + (50 * gameScale);
+        const pY = -pHeight / 2 - (12 * gameScale);
 
         // Plunger aktif değilse pompa yerinde
         if (typeof plunger === 'undefined' || !plunger.active) {
             // Düz ip çiz
             ctx.strokeStyle = '#8B4513';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 3 * gameScale;
             ctx.beginPath();
-            ctx.moveTo(ropeStartX, ropeY);
-            ctx.lineTo(pumpX, ropeY);
+            ctx.moveTo(rStartX, rY);
+            ctx.lineTo(pX, rY);
             ctx.stroke();
 
             // Pompa (pump.png)
             if (ASSETS.images.pump) {
                 ctx.drawImage(
                     ASSETS.images.pump,
-                    pumpX - 10,
-                    pumpY,
-                    pumpWidth,
-                    pumpHeight
+                    pX - (10 * gameScale),
+                    pY,
+                    80 * gameScale,
+                    55 * gameScale
                 );
             }
         }
@@ -715,15 +735,15 @@ class Gun {
 
     // Pompanın uç noktası (ateşleme başlangıcı)
     getPlungerStartPos() {
-        // Pompa ucu pozisyonu (dönen koordinat sisteminde)
-        const pumpEndX = 78 + 50 + 70;  // ropeStartX + pumpOffset + pumpWidth
-        const pumpEndY = -12;  // Yukarı hizalama
+        // Pompa ucu pozisyonu (dönen koordinat sisteminde) - ölçekli
+        const pEndX = (78 + 50 + 70) * gameScale;
+        const pEndY = -12 * gameScale;
         const cosR = Math.cos(this.rotation);
         const sinR = Math.sin(this.rotation);
 
         return {
-            x: this.pivotX + pumpEndX * cosR - pumpEndY * sinR,
-            y: this.pivotY + pumpEndX * sinR + pumpEndY * cosR
+            x: this.pivotX + pEndX * cosR - pEndY * sinR,
+            y: this.pivotY + pEndX * sinR + pEndY * cosR
         };
     }
 
@@ -745,8 +765,8 @@ class Gun {
 class Plunger {
     constructor() {
         this.reset();
-        this.width = 40;
-        this.height = 30;
+        this.width = 40 * gameScale;
+        this.height = 30 * gameScale;
         this.caughtBall = null;
     }
 
@@ -812,24 +832,24 @@ class Plunger {
                 return;
             }
 
-            // Vantuzun uç noktası (Görselde pumpX - 10 + 80 = this.x + 70)
-            const tipX = this.x + 70;
+            // Vantuzun uç noktası (Görselde pumpX - 10 + 80 = this.x + 70*gameScale)
+            const tipX = this.x + (70 * gameScale);
 
-            // Cam çarpışma kontrolü (Eğer boşlukta değilsek camda durmalı)
+            // Cam çarpışma kontrolü
             const inGap1 = this.y > pipe.gap1Start && this.y < pipe.gap1End;
             const inGap2 = this.y > pipe.gap2Start && this.y < pipe.gap2End;
 
             if (!inGap1 && !inGap2) {
                 // Cisim cam hizasına ulaştı mı?
                 if (tipX >= this.targetGlassX) {
-                    this.x = this.targetGlassX - 70; // Ucu tam cama yapıştır
+                    this.x = this.targetGlassX - (70 * gameScale); // Ucu tam cama yapıştır
                     this.stickToPipe();
                     return;
                 }
             } else {
                 // Boşluktayız, hayvanın oraya (merkeze) kadar git
                 if (tipX >= this.targetAnimalX) {
-                    this.x = this.targetAnimalX - 70; // Ucu tam merkeze getir
+                    this.x = this.targetAnimalX - (70 * gameScale); // Ucu tam merkeze getir
                     this.stickToPipe();
                     return;
                 }
@@ -850,7 +870,7 @@ class Plunger {
 
                 // Yakalanan topu da taşı
                 if (this.caughtBall) {
-                    this.caughtBall.drawX = this.x + 20;
+                    this.caughtBall.drawX = this.x + (20 * gameScale);
                     this.caughtBall.drawY = this.y;
                 }
             }
@@ -909,7 +929,7 @@ class Plunger {
         // Uçan hayvan listesine ekle
         flyingAnimals.push({
             type: ball.type,
-            x: this.x + 30,
+            x: this.x + (30 * gameScale),
             y: this.y,
             startY: this.y,
             opacity: 1,
@@ -929,10 +949,10 @@ class Plunger {
     draw() {
         if (!this.active) return;
 
-        // İp çizimi (Catcher gövdesinin önünden Plunger'a) - düz çizgi
+        // İp çizimi (Catcher gövdesinin önünden Plunger'a)
         const ropeStart = gun.getRopeStartPos();
         ctx.strokeStyle = '#8B4513';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3 * gameScale;
         ctx.beginPath();
         ctx.moveTo(ropeStart.x, ropeStart.y);
         ctx.lineTo(this.x, this.y);
@@ -940,14 +960,14 @@ class Plunger {
 
         // Pompa (pump.png)
         if (ASSETS.images.pump) {
-            const pumpWidth = 80;
-            const pumpHeight = 55;
+            const pWidth = 80 * gameScale;
+            const pHeight = 55 * gameScale;
             ctx.drawImage(
                 ASSETS.images.pump,
-                this.x - 10,
-                this.y - pumpHeight / 2,
-                pumpWidth,
-                pumpHeight
+                this.x - (10 * gameScale),
+                this.y - pHeight / 2,
+                pWidth,
+                pHeight
             );
         }
 
@@ -975,9 +995,9 @@ class Plunger {
         }
 
         if (img) {
-            const size = 60;
-            // Pompanın ucunda çiz (pumpWidth = 80)
-            ctx.drawImage(img, this.x + 60, this.y - size / 2, size, size);
+            const size = 60 * gameScale;
+            // Pompanın ucunda çiz (pWidth = 80)
+            ctx.drawImage(img, this.x + (60 * gameScale), this.y - size / 2, size, size);
         }
     }
 
@@ -989,13 +1009,13 @@ class Plunger {
         for (let ball of balls) {
             if (ball.caught) continue;
 
-            // Mesafe hesapla (Vantuzun ucu: this.x + 70)
-            const dx = (this.x + 70) - ball.drawX;
+            // Mesafe hesapla (Vantuzun ucu: this.x + 70*gameScale)
+            const dx = (this.x + (70 * gameScale)) - ball.drawX;
             const dy = this.y - ball.drawY;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            // Çarpışma kontrolü (Hayvan boyutu animalSize=75 olduğu için 55-60 arası ideal)
-            if (dist < 60) {
+            // Çarpışma kontrolü (Hayvan boyutu animalSize=75*gameScale olduğu için orantılı)
+            if (dist < (60 * gameScale)) {
                 // Sadece yakalanabilir (gap bölgesindeki) hayvanlar yakalanır
                 if (ball.catchable) {
                     this.catchBall(ball);
@@ -1108,33 +1128,17 @@ class Ball {
 class Pipe {
     constructor() {
         this.balls = [];
-        this.animalCount = 14;  // Daha fazla hayvan - sürekli akış
+        this.animalCount = 14;
 
-        // Tüp pozisyonu
-        this.x = 0;
-        this.y = 0;
-
-        // Boyutlar
-        this.pipeWidth = 95;            // Ana tüp genişliği
-        this.capWidth = 115;            // Kapak genişliği
-        this.ovalRingWidth = 125;       // Oval halka genişliği
-        this.animalSize = 75;           // Hayvan boyutu - BÜYÜK (tüp kenarına teğet)
-        this.animalSpacing = 70;        // Hayvanlar arası mesafe
-        this.upperHeight = 240;         // Üst bölüm yüksekliği (Artırıldı)
-        this.midHeight = 100;           // Orta yüzük yüksekliği
-        this.lowerHeight = 220;         // Alt bölüm yüksekliği
-
-        // Yakalanabilir bölgeler (gap'ler) - Y koordinatları draw() içinde hesaplanacak
-        this.gap1Start = 0;
-        this.gap1End = 0;
-        this.gap2Start = 0;
-        this.gap2End = 0;
-    }
-
-    updatePosition() {
-        // Tüp sağ tarafta
-        this.x = canvasWidth * 0.88;
-        // Y pozisyonu draw() içinde hesaplanıyor (alttan üste)
+        // Boyutlar (ölçekle çarpılacak temel değerler)
+        this.pipeWidth = 95 * gameScale;
+        this.capWidth = 115 * gameScale;
+        this.ovalRingWidth = 125 * gameScale;
+        this.animalSize = 75 * gameScale;
+        this.animalSpacing = 70 * gameScale;
+        this.upperHeight = 240 * gameScale;
+        this.midHeight = 100 * gameScale;
+        this.lowerHeight = 220 * gameScale;
     }
 
     // Tüpü çiz - Tarife göre katman katman
@@ -1150,8 +1154,8 @@ class Pipe {
         const ovalW = this.ovalRingWidth;
 
         // Y pozisyonları
-        // Üst tüp en üstte (Gap'i kapatmak için biraz yukarıdan başlasın)
-        const upperY = -50;
+        // Üst tüp en üstte
+        const upperY = -50 * gameScale;
         // Alt tüp sayfanın EN ALTINA yapışık
         const lowerY = canvasHeight - this.lowerHeight;
 
@@ -1241,24 +1245,24 @@ class Pipe {
         // ADIM 4: TÜM ÖN PARÇALARI ÇİZ (EN ÜSTTE - HER ŞEYİN ÜSTÜNDE)
         // ========================================
 
-        // 1. Üst tüpün ALT kısmı eklemi (Kullanıcı isteği: Biraz daraltıldı ve aşağı doğru uzatıldı)
+        // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - 145 / 2, upperY + this.upperHeight - 8, 145, 75);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, upperY + this.upperHeight - (8 * gameScale), 145 * gameScale, 75 * gameScale);
         }
 
-        // 2. Orta yüzük ÜST eklemi (Kullanıcı isteği: Biraz daha daraltıldı)
+        // 2. Orta yüzük ÜST eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - 140 / 2, midY - 8, 140, 60);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (140 * gameScale) / 2, midY - (8 * gameScale), 140 * gameScale, 60 * gameScale);
         }
 
-        // 3. Orta yüzük ALT eklemi (Kullanıcı isteği: Biraz daha yukarı taşındı)
+        // 3. Orta yüzük ALT eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - 148 / 2, midY + this.midHeight - 12, 148, 60);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * gameScale) / 2, midY + this.midHeight - (12 * gameScale), 148 * gameScale, 60 * gameScale);
         }
 
-        // 4. Alt tüp üst eklemi (Kullanıcı isteği: Biraz daraltıldı)
+        // 4. Alt tüp üst eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - 148 / 2, lowerY - 8, 148, 60);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * gameScale) / 2, lowerY - (8 * gameScale), 148 * gameScale, 60 * gameScale);
         }
     }
 
@@ -1914,7 +1918,7 @@ function updateAndDrawFlyingAnimals(deltaTime) {
             ctx.globalAlpha = animal.opacity;
             ctx.translate(animal.x, animal.y);
             ctx.scale(animal.scale, animal.scale);
-            const size = 60;
+            const size = 60 * gameScale;
             ctx.drawImage(img, -size / 2, -size / 2, size, size);
             ctx.restore();
         }
@@ -1937,8 +1941,8 @@ function drawBackground() {
 
     // Güneş
     if (ASSETS.images.sun) {
-        const sunSize = 100;
-        ctx.drawImage(ASSETS.images.sun, canvasWidth - sunSize - 50, 30, sunSize, sunSize);
+        const sunSize = 100 * gameScale;
+        ctx.drawImage(ASSETS.images.sun, canvasWidth - sunSize - (50 * gameScale), 30 * gameScale, sunSize, sunSize);
     }
 }
 
