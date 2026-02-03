@@ -518,7 +518,7 @@ function initGroundAnimals() {
     groundAnimals.push({
         type: 'rabbit',
         x: 0.05,
-        y: 0.65,
+        y: 0.65, // Görece yukarıda (arka)
         size: 45 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000,
@@ -535,7 +535,7 @@ function initGroundAnimals() {
     groundAnimals.push({
         type: 'cat',
         x: 0.12,
-        y: 0.78,
+        y: 0.75, // Catcher (0.78) civarı
         size: 65 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 500,
@@ -548,11 +548,11 @@ function initGroundAnimals() {
         swaySpeed: 0.002 + Math.random() * 0.001
     });
 
-    // En öndeki (en büyük) - Tavuk (Çok az sağa çekildi: 0.15 -> 0.20)
+    // En öndeki (en büyük) - Tavuk
     groundAnimals.push({
         type: 'chicken',
         x: 0.20,
-        y: 0.82,
+        y: 0.82, // Catcher'ın biraz önünde
         size: 90 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 1000,
@@ -667,9 +667,9 @@ class Gun {
         const xOffset = isMobile ? 0.30 : 0.22;
         this.pivotX = canvasWidth * xOffset;
 
-        // Mobilde catcher'ı DAHA DA yukarı taşı (380 -> 480)
-        const yOffset = isMobile ? 480 : 280;
-        this.pivotY = canvasHeight - (yOffset * gameScale);
+        // Sabit piksel yerine ekranın yüzdesiyle konumlandır (Zemine yapışması için)
+        // Arka plandaki çimen yaklaşık %75-%80 bandında
+        this.pivotY = canvasHeight * 0.78;
     }
 
     update() {
@@ -1176,15 +1176,16 @@ class Pipe {
         const xOffset = isMobile ? 0.82 : 0.88;
         this.x = canvasWidth * xOffset;
 
-        // Boyutları güncelle - Mobilde daha UZUN tüp parçaları
+        // Boyutları güncelle
         this.pipeWidth = 95 * gameScale;
         this.capWidth = 115 * gameScale;
         this.ovalRingWidth = 125 * gameScale;
         this.animalSize = 75 * gameScale;
         this.animalSpacing = 70 * gameScale;
 
-        const uHeight = isMobile ? 350 : 350; // PC'de de biraz daha uzattık
-        const lHeight = isMobile ? 380 : 220;
+        // Yükseklik limitleri
+        const uHeight = 350;
+        const lHeight = isMobile ? 380 : 500; // PC'de tüpü yere kadar uzat
 
         this.upperHeight = uHeight * gameScale;
         this.midHeight = 100 * gameScale;
@@ -1410,7 +1411,12 @@ class Pipe {
     }
 
     generateBalls() {
-        console.log('generateBalls çağrıldı, animalCount:', this.animalCount);
+        // Dinamik hayvan sayısı: Ekran boyuna göre kaç tane sığarsa (biraz da ekstra)
+        const requiredHeight = canvasHeight / gameScale;
+        this.animalCount = Math.ceil(requiredHeight / (this.animalSpacing / gameScale)) + 10;
+
+        console.log('generateBalls - Dinamik hayvan sayısı:', this.animalCount);
+
         // Tüpü hayvanlarla doldur
         const allTypes = ['chicken', 'rabbit', 'cat'];
         const animalList = [];
@@ -1425,7 +1431,6 @@ class Pipe {
 
         // Tüpü oluştur
         this.buildPipe(animalList);
-        console.log('Tüp oluşturuldu, toplar:', this.balls);
     }
 
     // Yeni hayvan ekle (üstten)
