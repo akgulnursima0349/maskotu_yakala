@@ -1175,7 +1175,7 @@ class Pipe {
         this.animalSize = 75 * gameScale;
         this.animalSpacing = 70 * gameScale;
 
-        const uHeight = isMobile ? 350 : 280;
+        const uHeight = isMobile ? 350 : 350; // PC'de de biraz daha uzattık
         const lHeight = isMobile ? 380 : 220;
 
         this.upperHeight = uHeight * gameScale;
@@ -1198,7 +1198,7 @@ class Pipe {
         // Y pozisyonları
         // Mobilde tüpü biraz daha aşağıdan başlat
         const isMobile = window.innerWidth < 768;
-        const yOffset = isMobile ? 20 : -50;
+        const yOffset = isMobile ? 20 : -100; // PC'de biraz daha yukarı çektik
         const upperY = yOffset * gameScale;
 
         // Alt tüp sayfanın EN ALTINA yapışık
@@ -1292,7 +1292,8 @@ class Pipe {
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, upperY + this.upperHeight - (8 * gameScale), 145 * gameScale, 75 * gameScale);
+            // Boşluk kalmaması için overlap'i biraz artırdık (8 -> 15)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, upperY + this.upperHeight - (15 * gameScale), 145 * gameScale, 75 * gameScale);
         }
 
         // 2. Orta yüzük ÜST eklemi
