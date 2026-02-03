@@ -207,9 +207,15 @@ let canvasWidth, canvasHeight;
 let gameScale = 1; // Global ölçek faktörü
 
 function getScale() {
-    // Referans genişlik 1920px kabul edilerek ölçek hesaplanır
-    // Mobil veya küçük ekranlarda öğelerin çok küçülmemesi için bir alt sınır (0.5) eklenebilir
-    return Math.max(window.innerWidth / 1920, 0.4);
+    // Mobil veya küçük ekranlarda öğelerin çok küçülmemesi için 
+    // portre modunda daha cömert bir ölçek kullanıyoruz.
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const baseScale = window.innerWidth / 1920;
+
+    if (isPortrait) {
+        return Math.max(baseScale * 1.8, 0.65); // Mobilde daha büyük öğeler
+    }
+    return Math.max(baseScale, 0.5);
 }
 
 function initCanvas() {
@@ -648,12 +654,15 @@ class Gun {
         // Ölçeklendirilmiş boyutlar
         this.catcherWidth = this.baseCatcherWidth * gameScale;
         this.catcherHeight = this.baseCatcherHeight * gameScale;
+        this.baseLegWidth = 70; // constructor'da tanımlanmamışsa burada da kullanılabilir ama constructor'da base değerler olmalı
         this.legWidth = this.baseLegWidth * gameScale;
         this.legHeight = this.baseLegHeight * gameScale;
 
-        // Pivot noktası = vidanın olduğu yer
-        this.pivotX = canvasWidth * 0.22;
-        this.pivotY = canvasHeight - (280 * gameScale); // 280px referans değeri ölçeklendirildi
+        // Pivot noktası
+        // Mobilde/dar ekranda daha merkeze yakın olsun
+        const xOffset = window.innerWidth < 768 ? 0.30 : 0.22;
+        this.pivotX = canvasWidth * xOffset;
+        this.pivotY = canvasHeight - (280 * gameScale);
     }
 
     update() {
@@ -1130,7 +1139,15 @@ class Pipe {
         this.balls = [];
         this.animalCount = 14;
 
-        // Boyutlar (ölçekle çarpılacak temel değerler)
+        this.updatePosition(); // Initial position and dimensions
+    }
+
+    updatePosition() {
+        // Mobilde tüp biraz daha içeride olsun
+        const xOffset = window.innerWidth < 768 ? 0.82 : 0.88;
+        this.x = canvasWidth * xOffset;
+
+        // Boyutları da güncelle
         this.pipeWidth = 95 * gameScale;
         this.capWidth = 115 * gameScale;
         this.ovalRingWidth = 125 * gameScale;
@@ -1934,9 +1951,27 @@ function drawBackground() {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Arka plan görseli - tam ekran
+    // Arka plan görseli - "Cover" mantığıyla sığdır (yakınlaştır)
     if (ASSETS.images.background) {
-        ctx.drawImage(ASSETS.images.background, 0, 0, canvasWidth, canvasHeight);
+        const img = ASSETS.images.background;
+        const imgRatio = img.width / img.height;
+        const canvasRatio = canvasWidth / canvasHeight;
+
+        let drawW, drawH, drawX, drawY;
+
+        if (canvasRatio > imgRatio) {
+            drawW = canvasWidth;
+            drawH = canvasWidth / imgRatio;
+            drawX = 0;
+            drawY = (canvasHeight - drawH) / 2;
+        } else {
+            drawH = canvasHeight;
+            drawW = canvasHeight * imgRatio;
+            drawY = 0;
+            drawX = (canvasWidth - drawW) / 2;
+        }
+
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
     }
 
     // Güneş
