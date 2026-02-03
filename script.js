@@ -208,14 +208,18 @@ let gameScale = 1; // Global ölçek faktörü
 
 function getScale() {
     // Mobil veya küçük ekranlarda öğelerin çok küçülmemesi için 
-    // portre modunda daha cömert bir ölçek kullanıyoruz.
     const isPortrait = window.innerHeight > window.innerWidth;
     const baseScale = window.innerWidth / 1920;
+    const heightScale = window.innerHeight / 1080;
 
     if (isPortrait) {
-        return Math.max(baseScale * 1.8, 0.65); // Mobilde daha büyük öğeler
+        // Portre modunda dikey boşluğu doldurmak için daha agresif ölçek
+        return Math.max(baseScale * 1.9, 0.7);
     }
-    return Math.max(baseScale, 0.5);
+
+    // Yatayda ve akıllı tahtalarda her iki boyutu da baz al
+    const finalScale = Math.min(baseScale, heightScale);
+    return Math.max(finalScale, 0.6);
 }
 
 function initCanvas() {

@@ -36,11 +36,15 @@ body {
 
 .intro-container {
     display: flex;
-    width: 90%;
-    max-width: 1200px;
-    height: 85%;
+    width: 95%;
+    /* Biraz daha genişledi */
+    max-width: 1400px;
+    /* Dev ekranlar için limit artırıldı */
+    height: 90vh;
+    /* Sabit % yerine vh kullanıldı */
     z-index: 10;
-    gap: 40px;
+    gap: 2vw;
+    /* Dinamik boşluk */
     align-items: center;
 }
 
@@ -71,14 +75,13 @@ body {
 
 .game-title {
     font-family: 'Fredoka One', cursive;
-    font-size: 5rem;
-    /* Boyut büyütüldü */
+    font-size: min(8vw, 5rem);
+    /* Mobil-PC arası esnek boyut */
     color: #FF6B35;
     text-align: center;
     margin-bottom: 5px;
     line-height: 1.1;
-    /* İki satır için ideal */
-    text-shadow: 4px 4px 0 #FFD700, 7px 7px 15px rgba(0, 0, 0, 0.15);
+    text-shadow: 0.3vw 0.3vw 0 #FFD700, 0.5vw 0.5vw 1vw rgba(0, 0, 0, 0.15);
     animation: titleFloat 3s ease-in-out infinite;
 }
 
@@ -797,6 +800,22 @@ body {
     font-family: 'Fredoka One', cursive;
     font-size: 2rem;
     color: #4CAF50;
+}
+
+/* Smartboard & Dev Ekranlar için özel ayar */
+@media (min-width: 1600px) {
+    .intro-container {
+        max-width: 1600px;
+    }
+
+    .game-title {
+        font-size: 7rem;
+    }
+
+    .play-btn {
+        padding: 25px 80px;
+        font-size: 2.5rem;
+    }
 }
 
 /* ==================== RESPONSIVE ==================== */
