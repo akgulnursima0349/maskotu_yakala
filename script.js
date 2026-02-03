@@ -663,8 +663,8 @@ class Gun {
         const xOffset = isMobile ? 0.30 : 0.22;
         this.pivotX = canvasWidth * xOffset;
 
-        // Mobilde catcher'ı daha yukarı taşı (280 -> 380)
-        const yOffset = isMobile ? 380 : 280;
+        // Mobilde catcher'ı DAHA DA yukarı taşı (380 -> 480)
+        const yOffset = isMobile ? 480 : 280;
         this.pivotY = canvasHeight - (yOffset * gameScale);
     }
 
@@ -1140,7 +1140,8 @@ class Ball {
 class Pipe {
     constructor() {
         this.balls = [];
-        this.animalCount = 14;
+        // Mobilde daha fazla hayvan (zemine ulaşması için)
+        this.animalCount = window.innerWidth < 768 ? 22 : 14;
 
         // Güvenli varsayılanlar (updatePosition ile güncellenecek)
         this.x = canvasWidth ? canvasWidth * 0.88 : 800;
