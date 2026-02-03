@@ -1175,7 +1175,7 @@ class Pipe {
         this.animalSize = 75 * gameScale;
         this.animalSpacing = 70 * gameScale;
 
-        const uHeight = isMobile ? 350 : 240;
+        const uHeight = isMobile ? 350 : 280;
         const lHeight = isMobile ? 380 : 220;
 
         this.upperHeight = uHeight * gameScale;
