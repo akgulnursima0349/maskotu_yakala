@@ -1221,7 +1221,8 @@ class Pipe {
 
         // Üst tüpün ALT kısmına halka (BÜYÜK oval halka)
         if (ASSETS.images.pipeMidUpperBack) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperBack, x - ovalW / 2, upperY + this.upperHeight - 20, ovalW, 50);
+            // Biraz aşağı taşıdık (-20 -> -5)
+            ctx.drawImage(ASSETS.images.pipeMidUpperBack, x - ovalW / 2, upperY + this.upperHeight - (5 * gameScale), ovalW, 50 * gameScale);
         }
 
         // Orta yüzük ÜST arka (üst kenarı düzeltmek için)
@@ -1292,8 +1293,8 @@ class Pipe {
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Boşluk kalmaması için overlap'i biraz artırdık (8 -> 15)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, upperY + this.upperHeight - (15 * gameScale), 145 * gameScale, 75 * gameScale);
+            // Biraz aşağı taşıdık (-15 -> +5)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, upperY + this.upperHeight + (5 * gameScale), 145 * gameScale, 75 * gameScale);
         }
 
         // 2. Orta yüzük ÜST eklemi
