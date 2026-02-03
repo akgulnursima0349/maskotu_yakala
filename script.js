@@ -544,10 +544,10 @@ function initGroundAnimals() {
         swaySpeed: 0.002 + Math.random() * 0.001
     });
 
-    // En öndeki (en büyük)
+    // En öndeki (en büyük) - Tavuk (Çok az sağa çekildi: 0.15 -> 0.20)
     groundAnimals.push({
         type: 'chicken',
-        x: 0.30,
+        x: 0.20,
         y: 0.82,
         size: 90 * gameScale,
         state: 'static',
@@ -1274,17 +1274,20 @@ class Pipe {
 
         // 1. Üst ana boru (long_upper_pipe)
         if (ASSETS.images.pipeUpper) {
-            ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight);
+            // Boşluk kapanmadığı için boruyu biraz daha aşağı uzatıyoruz (+15 -> +35)
+            ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight + (35 * gameScale));
         }
 
         // 2. Orta yüzük (mid_pipe)
         if (ASSETS.images.pipeMidRing) {
-            ctx.drawImage(ASSETS.images.pipeMidRing, x - w / 2, midY, w, this.midHeight);
+            // Boşluk kapanması için orta boruyu da biraz daha uzun çiziyoruz
+            ctx.drawImage(ASSETS.images.pipeMidRing, x - w / 2, midY, w, this.midHeight + (15 * gameScale));
         }
 
         // 3. Alt ana boru (lower_pipe)
         if (ASSETS.images.pipeLower) {
-            ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY, w, this.lowerHeight);
+            // Sayfanın dibine sıfırlamak için boyunu biraz daha uzun çiziyoruz (+50)
+            ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY, w, this.lowerHeight + 50);
         }
 
         // ========================================
@@ -1293,23 +1296,26 @@ class Pipe {
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Biraz aşağı taşıdık (-15 -> +5)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, upperY + this.upperHeight + (5 * gameScale), 145 * gameScale, 75 * gameScale);
+            // Kenarları dışarıda kaldığı için minicik daraltıldı (145 -> 138)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (138 * gameScale) / 2, upperY + this.upperHeight + (5 * gameScale), 138 * gameScale, 75 * gameScale);
         }
 
-        // 2. Orta yüzük ÜST eklemi
+        // 2. Orta yüzük ÜST eklemi (Sarı halka geri getirildi)
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (140 * gameScale) / 2, midY - (8 * gameScale), 140 * gameScale, 60 * gameScale);
+            // Kenarlara uzatılmıştı (155), azıcık kısaltıldı (155 -> 145) ve aşağı doğru ince (70)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, midY - (5 * gameScale), 145 * gameScale, 70 * gameScale);
         }
 
-        // 3. Orta yüzük ALT eklemi
+        // 3. Orta yüzük ALT eklemi (Sarı halka geri getirildi)
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * gameScale) / 2, midY + this.midHeight - (12 * gameScale), 148 * gameScale, 60 * gameScale);
+            // Konumu ve eni korundu, aşağı doğru kalınlığı artırıldı (55 -> 85)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (145 * gameScale) / 2, midY + this.midHeight - (15 * gameScale), 145 * gameScale, 85 * gameScale);
         }
 
         // 4. Alt tüp üst eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * gameScale) / 2, lowerY - (8 * gameScale), 148 * gameScale, 60 * gameScale);
+            // Biraz daha enli (kalın) görünmesi için boyunu artırdık (60 -> 90)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * gameScale) / 2, lowerY - (8 * gameScale), 148 * gameScale, 90 * gameScale);
         }
     }
 
