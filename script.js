@@ -654,15 +654,18 @@ class Gun {
         // Ölçeklendirilmiş boyutlar
         this.catcherWidth = this.baseCatcherWidth * gameScale;
         this.catcherHeight = this.baseCatcherHeight * gameScale;
-        this.baseLegWidth = 70; // constructor'da tanımlanmamışsa burada da kullanılabilir ama constructor'da base değerler olmalı
+        this.baseLegWidth = 70;
         this.legWidth = this.baseLegWidth * gameScale;
         this.legHeight = this.baseLegHeight * gameScale;
 
         // Pivot noktası
-        // Mobilde/dar ekranda daha merkeze yakın olsun
-        const xOffset = window.innerWidth < 768 ? 0.30 : 0.22;
+        const isMobile = window.innerWidth < 768;
+        const xOffset = isMobile ? 0.30 : 0.22;
         this.pivotX = canvasWidth * xOffset;
-        this.pivotY = canvasHeight - (280 * gameScale);
+
+        // Mobilde catcher'ı daha yukarı taşı (280 -> 380)
+        const yOffset = isMobile ? 380 : 280;
+        this.pivotY = canvasHeight - (yOffset * gameScale);
     }
 
     update() {
@@ -1159,19 +1162,24 @@ class Pipe {
     }
 
     updatePosition() {
+        const isMobile = window.innerWidth < 768;
         // Mobilde tüp biraz daha içeride olsun
-        const xOffset = window.innerWidth < 768 ? 0.82 : 0.88;
+        const xOffset = isMobile ? 0.82 : 0.88;
         this.x = canvasWidth * xOffset;
 
-        // Boyutları da güncelle
+        // Boyutları güncelle - Mobilde daha UZUN tüp parçaları
         this.pipeWidth = 95 * gameScale;
         this.capWidth = 115 * gameScale;
         this.ovalRingWidth = 125 * gameScale;
         this.animalSize = 75 * gameScale;
         this.animalSpacing = 70 * gameScale;
-        this.upperHeight = 240 * gameScale;
+
+        const uHeight = isMobile ? 350 : 240;
+        const lHeight = isMobile ? 380 : 220;
+
+        this.upperHeight = uHeight * gameScale;
         this.midHeight = 100 * gameScale;
-        this.lowerHeight = 220 * gameScale;
+        this.lowerHeight = lHeight * gameScale;
     }
 
     // Tüpü çiz - Tarife göre katman katman
@@ -1187,8 +1195,11 @@ class Pipe {
         const ovalW = this.ovalRingWidth;
 
         // Y pozisyonları
-        // Üst tüp en üstte
-        const upperY = -50 * gameScale;
+        // Mobilde tüpü biraz daha aşağıdan başlat
+        const isMobile = window.innerWidth < 768;
+        const yOffset = isMobile ? 20 : -50;
+        const upperY = yOffset * gameScale;
+
         // Alt tüp sayfanın EN ALTINA yapışık
         const lowerY = canvasHeight - this.lowerHeight;
 
