@@ -1311,8 +1311,8 @@ class Pipe {
 
         // 1. Üst ana boru (long_upper_pipe)
         if (ASSETS.images.pipeUpper) {
-            // Mobilde boruyu daha da aşağı uzatıyoruz (35 -> 60)
-            const extraReach = isMobile ? 60 * gameScale : 35 * gameScale;
+            // EKSTREM UZATMA: Mobilde boruyu ÇOK DAHA aşağı uzatıyoruz (60 -> 150)
+            const extraReach = isMobile ? 150 * gameScale : 35 * gameScale;
             ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight + extraReach);
         }
 
@@ -1324,9 +1324,8 @@ class Pipe {
 
         // 3. Alt ana boru (lower_pipe)
         if (ASSETS.images.pipeLower) {
-            // Mobilde boruyu daha da yukarı uzatıyoruz 
-            // drawImage parametrelerinde lowerY başlangıç noktası olduğu için yukarı uzatmak için Y'yi küçültüp boyu artırıyoruz
-            const extraReach = isMobile ? 60 * gameScale : 0;
+            // EKSTREM UZATMA: Mobilde boruyu ÇOK DAHA yukarı uzatıyoruz (60 -> 150)
+            const extraReach = isMobile ? 150 * gameScale : 0;
             ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY - extraReach, w, this.lowerHeight + extraReach + 50);
         }
 
