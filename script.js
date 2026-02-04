@@ -1193,7 +1193,7 @@ class Pipe {
         if (isMobile) {
             const baseTotalHeight = canvasHeight / gameScale;
             const yOffsetBase = 20; // isMobile ? 20 : -80
-            const targetGapBase = 140; // 2 hayvanlık boşluk (2 * 70)
+            const targetGapBase = 110; // Daha dar boşluk (140 -> 110) - Boruları merkeze yaklaştırır
             const midRingBase = 100;
 
             // Toplam boşluk (Üst boşluk + Alt boşluk + Orta halka)
