@@ -1899,12 +1899,63 @@ function updateUI() {
 function endGame() {
     GameState.currentScreen = 'end';
 
-    document.getElementById('final-score-value').textContent = GameState.score;
-    document.getElementById('correct-answers').textContent = GameState.correctAnswers;
-    document.getElementById('successful-catches').textContent = GameState.successfulCatches;
+    // 1. ÖZET EKRANI (ADIM 1) - Sessiz ve butonsuz
+    document.getElementById('summary-score-value').textContent = GameState.score;
+    document.getElementById('summary-correct-answers').textContent = GameState.correctAnswers;
+    document.getElementById('summary-successful-catches').textContent = GameState.successfulCatches;
 
-    document.getElementById('end-modal').classList.add('active');
+    document.getElementById('summary-modal').classList.add('active');
+
+    // 3 Saniye sonra kutlamaya geç
+    setTimeout(() => {
+        // Özet modalını kapat
+        document.getElementById('summary-modal').classList.remove('active');
+
+        // 2. KUTLAMA EKRANI (ADIM 2) - Müzikli ve Konfetili
+        showCelebrationScreen();
+    }, 3000);
+}
+
+function showCelebrationScreen() {
+    GameState.currentScreen = 'celebration';
+
+    // Puanı ayarla
+    document.getElementById('final-score-value').textContent = GameState.score;
+
+    // Ekranı göster
+    document.getElementById('celebration-screen').classList.add('active');
+
+    // Müzik ve konfeti başlat
     AUDIO_MANAGER.play('celebration');
+    startConfetti();
+}
+
+let confettiInterval;
+function startConfetti() {
+    const container = document.getElementById('confetti-container');
+    const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
+
+    confettiInterval = setInterval(() => {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 8 + 5 + 'px';
+        confetti.style.height = confetti.style.width;
+        confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
+
+        container.appendChild(confetti);
+
+        // Animasyon bitince temizle
+        setTimeout(() => confetti.remove(), 5000);
+    }, 100);
+}
+
+function stopConfetti() {
+    if (confettiInterval) {
+        clearInterval(confettiInterval);
+        document.getElementById('confetti-container').innerHTML = '';
+    }
 }
 
 // ==================== ANA OYUN DÖNGÜSÜ ====================
@@ -2131,8 +2182,10 @@ function startGame() {
 }
 
 function restartGame() {
-    // Bitiş modalını kapat
-    document.getElementById('end-modal').classList.remove('active');
+    // Tüm olası bitiş ekranlarını kapat
+    document.getElementById('summary-modal').classList.remove('active');
+    document.getElementById('celebration-screen').classList.remove('active');
+    stopConfetti();
 
     // Oyun durumunu sıfırla
     GameState.reset();

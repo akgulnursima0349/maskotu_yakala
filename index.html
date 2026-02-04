@@ -115,35 +115,51 @@
         </div>
     </div>
 
-    <!-- ==================== BİTİŞ POPUP ==================== -->
-    <div id="end-modal" class="modal">
-        <div class="modal-content end-content">
-            <h2>Oyun Bitti!</h2>
+    <!-- ==================== ÖZET POPUP (ADIM 1) ==================== -->
+    <div id="summary-modal" class="modal">
+        <div class="modal-content summary-content">
+            <h2>Oyun Tamamlandı!</h2>
             <div class="final-score">
                 <span>Toplam Puanın:</span>
-                <span id="final-score-value">0</span>
+                <span id="summary-score-value">0</span>
             </div>
             <div class="final-stats">
                 <div class="stat-item">
                     <span>Doğru Cevap:</span>
-                    <span id="correct-answers">0</span>
+                    <span id="summary-correct-answers">0</span>
                 </div>
                 <div class="stat-item">
                     <span>İsabetli Atış:</span>
-                    <span id="successful-catches">0</span>
+                    <span id="summary-successful-catches">0</span>
                 </div>
             </div>
-            <button id="restart-button" class="play-btn">
-                <span>Tekrar Oyna</span>
+            <p style="color: #666; font-style: italic; margin-top: 10px;">Lütfen bekleyin...</p>
+        </div>
+    </div>
+
+    <!-- ==================== KUTLAMA EKRANI (ADIM 2) ==================== -->
+    <div id="celebration-screen" class="screen flex-column celebration-screen">
+        <div id="confetti-container"></div>
+
+        <div class="celebration-content">
+            <img src="game/trophy.png" alt="Kupa" class="trophy-img">
+            <h1 class="celebration-title">MUHTEŞEM!</h1>
+            <div class="celebration-score-box">
+                <span class="score-label">TOPLAM PUAN</span>
+                <span id="final-score-value">0</span>
+            </div>
+            <button id="restart-button" class="play-btn celebration-restart">
+                <span class="restart-icon">🔄</span>
+                <span>TEKRAR OYNA</span>
             </button>
         </div>
     </div>
 
     <div id="version-label"
         style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 5px; font-family: sans-serif; font-size: 12px; z-index: 9999; pointer-events: none;">
-        Ver: 0459_Shorten_Lower_Pipe | <span id="debug-pivot">--</span>
+        Ver: 0512_Celebration_Flow | <span id="debug-pivot">--</span>
     </div>
-    <script src="script.js?v=20260204_0459"></script>
+    <script src="script.js?v=20260204_0512"></script>
 </body>
 
 </html>

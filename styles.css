@@ -802,6 +802,129 @@ body {
     color: #4CAF50;
 }
 
+/* ==================== KUTLAMA EKRANI ==================== */
+.celebration-screen {
+    background: radial-gradient(circle, #87CEEB 0%, #4A90E2 100%);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.celebration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+    text-align: center;
+    animation: celebrationPop 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.trophy-img {
+    width: min(40vw, 300px);
+    height: auto;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    animation: trophyFloat 3s ease-in-out infinite;
+}
+
+.celebration-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: min(10vw, 4.5rem);
+    color: #FFD700;
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2), 0 0 30px rgba(255, 215, 0, 0.5);
+    margin: 0;
+}
+
+.celebration-score-box {
+    background: white;
+    padding: 20px 50px;
+    border-radius: 30px;
+    border: 5px solid #FFD700;
+    box-shadow: 0 10px 0 #E5C100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.score-label {
+    font-weight: 800;
+    color: #333;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+#celebration-screen #final-score-value {
+    font-family: 'Fredoka One', cursive;
+    font-size: min(15vw, 6rem);
+    color: #FF6B35;
+    margin: 0;
+    line-height: 1;
+}
+
+.celebration-restart {
+    margin-top: 30px;
+}
+
+.restart-icon {
+    font-size: 2.5rem;
+}
+
+/* KONFETİ */
+#confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes trophyFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-30px) rotate(5deg);
+    }
+}
+
+@keyframes celebrationPop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
 /* Smartboard & Dev Ekranlar için özel ayar */
 @media (min-width: 1600px) {
     .intro-container {
