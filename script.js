@@ -659,17 +659,23 @@ class Gun {
         this.catcherWidth = this.baseCatcherWidth * gameScale;
         this.catcherHeight = this.baseCatcherHeight * gameScale;
         this.baseLegWidth = 70;
+        this.legWidth = this.baseScale * gameScale; // Hatalı baseScale kullanımı düzeltildi (this.baseLegWidth olmalı)
         this.legWidth = this.baseLegWidth * gameScale;
         this.legHeight = this.baseLegHeight * gameScale;
 
         // Pivot noktası
         const isMobile = window.innerWidth < 768;
+        const isPortrait = window.innerHeight > window.innerWidth;
         const xOffset = isMobile ? 0.30 : 0.22;
         this.pivotX = canvasWidth * xOffset;
 
-        // Sabit piksel yerine ekranın yüzdesiyle konumlandır (Zemine yapışması için)
-        // Mobilde EKSTREM yukarı kaldırıldı (0.15 -> 0.10) ve PC konumu korundu
-        this.pivotY = isMobile ? canvasHeight * 0.10 : canvasHeight * 0.68;
+        // Dikey modda veya dar ekranda (isMobile) agresif yukarı çekme
+        const pivotPct = (isPortrait || isMobile) ? 0.10 : 0.68;
+        this.pivotY = canvasHeight * pivotPct;
+
+        // Debug bilgisi
+        const debugLabel = document.getElementById('debug-pivot');
+        if (debugLabel) debugLabel.textContent = `Y: ${Math.round(pivotPct * 100)}% | Mob: ${isMobile}`;
     }
 
     update() {
