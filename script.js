@@ -1189,13 +1189,28 @@ class Pipe {
         this.animalSize = 75 * gameScale;
         this.animalSpacing = 70 * gameScale;
 
-        // Yükseklik limitleri
-        const uHeight = 350;
-        const lHeight = isMobile ? 380 : 420; // PC'de tüpü biraz kısalttık (500 -> 420)
+        // Yükseklik limitleri ve dinamik hesaplama (Mobilde 2'şer hayvanlık boşluk bırakmak için)
+        if (isMobile) {
+            const baseTotalHeight = canvasHeight / gameScale;
+            const yOffsetBase = 20; // isMobile ? 20 : -80
+            const targetGapBase = 140; // 2 hayvanlık boşluk (2 * 70)
+            const midRingBase = 100;
 
-        this.upperHeight = uHeight * gameScale;
-        this.midHeight = 100 * gameScale;
-        this.lowerHeight = lHeight * gameScale;
+            // Toplam boşluk (Üst boşluk + Alt boşluk + Orta halka)
+            const totalRequiredGap = (targetGapBase * 2) + midRingBase;
+            const remainingForPipes = baseTotalHeight - yOffsetBase - totalRequiredGap;
+
+            // Boruları kalan mesafeye göre paylaştır (Üst boru biraz daha kısa olabilir)
+            this.upperHeight = (remainingForPipes * 0.45) * gameScale;
+            this.lowerHeight = (remainingForPipes * 0.55) * gameScale;
+            this.midHeight = midRingBase * gameScale;
+        } else {
+            const uHeight = 350;
+            const lHeight = 420; // PC'de tüpü biraz kısalttık (500 -> 420)
+            this.upperHeight = uHeight * gameScale;
+            this.midHeight = 100 * gameScale;
+            this.lowerHeight = lHeight * gameScale;
+        }
     }
 
     // Tüpü çiz - Tarife göre katman katman
