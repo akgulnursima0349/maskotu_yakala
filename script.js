@@ -1297,8 +1297,8 @@ class Pipe {
         }
 
         if (ASSETS.images.pipeLower) {
-            // Mobilde boruyu yukarı uzat (Halkayı çok geçmeyecek şekilde)
-            const extraReach = isMob ? 25 * gameScale : 0;
+            // Mobilde boruyu yukarı uzat (Eklem halkasını geçmeyecek şekilde daha da kısalttık: 25 -> 10)
+            const extraReach = isMob ? 10 * gameScale : 0;
             ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY - extraReach, w, this.lowerHeight + extraReach + 50);
         }
 
