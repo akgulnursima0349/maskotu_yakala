@@ -668,8 +668,8 @@ class Gun {
         this.pivotX = canvasWidth * xOffset;
 
         // Sabit piksel yerine ekranın yüzdesiyle konumlandır (Zemine yapışması için)
-        // Mobilde bayağı yukarı kaldırıldı (0.70 -> 0.55) ve PC'de minicik yukarı alındı (0.75 -> 0.72)
-        this.pivotY = isMobile ? canvasHeight * 0.55 : canvasHeight * 0.72;
+        // Mobilde biraz daha yukarı kaldırıldı (0.55 -> 0.48) ve PC'de de yukarı alındı (0.72 -> 0.68)
+        this.pivotY = isMobile ? canvasHeight * 0.48 : canvasHeight * 0.68;
     }
 
     update() {
