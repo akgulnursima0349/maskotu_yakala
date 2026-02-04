@@ -535,7 +535,7 @@ function initGroundAnimals() {
     groundAnimals.push({
         type: 'cat',
         x: 0.12,
-        y: 0.75, // Catcher (0.78) civarı
+        y: 0.66, // Kullanıcı isteğiyle 0.66'ya çekildi
         size: 65 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 500,
@@ -552,7 +552,7 @@ function initGroundAnimals() {
     groundAnimals.push({
         type: 'chicken',
         x: 0.20,
-        y: 0.82, // Catcher'ın biraz önünde
+        y: 0.67, // Kullanıcı isteğiyle 0.67'ye çekildi
         size: 90 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 1000,
