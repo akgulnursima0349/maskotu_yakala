@@ -1031,8 +1031,8 @@ class Gun {
 
         // Pivot noktası
         const isMob = isMobileView();
-        // Catcher'ı sola çekiyoruz (0.30 -> 0.22)
-        const xOffset = 0.22;
+        // Catcher'ı biraz daha sola çekiyoruz (0.22 -> 0.18)
+        const xOffset = 0.18;
         this.pivotX = canvasWidth * xOffset;
 
         // Dikey modda veya dar ekranda uçurum kenarı hizası (%38 alttan -> 0.62 üstten)
@@ -1192,7 +1192,7 @@ class Pipe {
         // Yükseklik limitleri ve dinamik hesaplama (Mobilde 2'şer hayvanlık boşluk bırakmak için)
         if (isMob) {
             const baseTotalHeight = canvasHeight / gameScale;
-            const yOffsetBase = 20;
+            const yOffsetBase = -150; // Yukarıdaki boşluğu kapatmak için daha yukarıdan başlatıyoruz
             const targetGapBase = 140; // 2 hayvanlık boşluk (2 * 70)
             const midRingBase = 100;
 
@@ -1225,7 +1225,7 @@ class Pipe {
         const ovalW = this.ovalRingWidth;
 
         const isMob = isMobileView();
-        const yOffset = isMob ? 20 : -80;
+        const yOffset = isMob ? -150 : -80;
         const upperY = yOffset * gameScale;
 
         // Alt tüp sayfanın EN ALTINA yapışık
