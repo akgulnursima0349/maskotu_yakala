@@ -1193,7 +1193,7 @@ class Pipe {
         if (isMobile) {
             const baseTotalHeight = canvasHeight / gameScale;
             const yOffsetBase = 20; // isMobile ? 20 : -80
-            const targetGapBase = 110; // Daha dar boşluk (140 -> 110) - Boruları merkeze yaklaştırır
+            const targetGapBase = 80; // ÇOK DAHA dar boşluk (110 -> 80) - Boruları merkeze iyice yaklaştırır
             const midRingBase = 100;
 
             // Toplam boşluk (Üst boşluk + Alt boşluk + Orta halka)
@@ -1204,6 +1204,13 @@ class Pipe {
             this.upperHeight = (remainingForPipes * 0.45) * gameScale;
             this.lowerHeight = (remainingForPipes * 0.55) * gameScale;
             this.midHeight = midRingBase * gameScale;
+
+            // Debug bilgisini güncelle (UH: UpperHeight, LH: LowerHeight)
+            const debugLabel = document.getElementById('debug-pivot');
+            if (debugLabel) {
+                const curText = debugLabel.textContent.split('|')[0];
+                debugLabel.textContent = `${curText} | UH:${Math.round(this.upperHeight / gameScale)} LH:${Math.round(this.lowerHeight / gameScale)}`;
+            }
         } else {
             const uHeight = 350;
             const lHeight = 420; // PC'de tüpü biraz kısalttık (500 -> 420)
