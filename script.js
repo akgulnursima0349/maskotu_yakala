@@ -1031,7 +1031,8 @@ class Gun {
 
         // Pivot noktası
         const isMob = isMobileView();
-        const xOffset = isMob ? 0.30 : 0.22;
+        // Catcher'ı sola çekiyoruz (0.30 -> 0.22)
+        const xOffset = 0.22;
         this.pivotX = canvasWidth * xOffset;
 
         // Dikey modda veya dar ekranda uçurum kenarı hizası (%38 alttan -> 0.62 üstten)
@@ -1123,6 +1124,30 @@ class Gun {
         }
         ctx.restore();
         ctx.restore();
+    }
+
+    // Pompanın uç noktası (ateşleme başlangıcı)
+    getPlungerStartPos() {
+        const pEndX = (70 + 50 + 70) * gameScale;
+        const pEndY = -40 * gameScale;
+        const cosR = Math.cos(this.rotation);
+        const sinR = Math.sin(this.rotation);
+        return {
+            x: this.pivotX + pEndX * cosR - pEndY * sinR,
+            y: this.pivotY + pEndX * sinR + pEndY * cosR
+        };
+    }
+
+    // İpin başlangıç noktası (catcher gövdesinin önü)
+    getRopeStartPos() {
+        const ropeStartX = 70 * gameScale;
+        const ropeStartY = -40 * gameScale;
+        const cosR = Math.cos(this.rotation);
+        const sinR = Math.sin(this.rotation);
+        return {
+            x: this.pivotX + ropeStartX * cosR - ropeStartY * sinR,
+            y: this.pivotY + ropeStartX * sinR + ropeStartY * cosR
+        };
     }
 }
 
