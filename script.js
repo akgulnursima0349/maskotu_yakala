@@ -1311,8 +1311,9 @@ class Pipe {
 
         // 1. Üst ana boru (long_upper_pipe)
         if (ASSETS.images.pipeUpper) {
-            // Boşluk kapanmadığı için boruyu biraz daha aşağı uzatıyoruz (+15 -> +35)
-            ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight + (35 * gameScale));
+            // Mobilde boruyu daha da aşağı uzatıyoruz (35 -> 60)
+            const extraReach = isMobile ? 60 * gameScale : 35 * gameScale;
+            ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight + extraReach);
         }
 
         // 2. Orta yüzük (mid_pipe)
@@ -1323,8 +1324,10 @@ class Pipe {
 
         // 3. Alt ana boru (lower_pipe)
         if (ASSETS.images.pipeLower) {
-            // Sayfanın dibine sıfırlamak için boyunu biraz daha uzun çiziyoruz (+50)
-            ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY, w, this.lowerHeight + 50);
+            // Mobilde boruyu daha da yukarı uzatıyoruz 
+            // drawImage parametrelerinde lowerY başlangıç noktası olduğu için yukarı uzatmak için Y'yi küçültüp boyu artırıyoruz
+            const extraReach = isMobile ? 60 * gameScale : 0;
+            ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY - extraReach, w, this.lowerHeight + extraReach + 50);
         }
 
         // ========================================
