@@ -8,7 +8,8 @@
 body {
     font-family: 'Nunito', sans-serif;
     overflow: hidden;
-    background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 100%);
+    background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
+    /* Arka planı koyulaştırdık (Test için) */
     min-height: 100vh;
 }
 
