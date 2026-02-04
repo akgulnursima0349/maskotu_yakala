@@ -551,8 +551,8 @@ function initGroundAnimals() {
     // En öndeki (en büyük) - Tavuk
     groundAnimals.push({
         type: 'chicken',
-        x: 0.20,
-        y: 0.67, // Kullanıcı isteğiyle 0.67'ye çekildi
+        x: 0.15, // Kullanıcı isteğiyle sola çekildi (0.20 -> 0.15)
+        y: 0.69, // Kullanıcı isteğiyle 0.69'a çekildi
         size: 90 * gameScale,
         state: 'static',
         blinkTimer: Math.random() * 2000 + 1000,
