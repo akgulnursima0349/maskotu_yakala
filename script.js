@@ -1287,8 +1287,8 @@ class Pipe {
         // ========================================
 
         if (ASSETS.images.pipeUpper) {
-            // Mobilde boruyu aşağı uzat (Yeterli reach ile)
-            const extraReach = isMob ? 45 * gameScale : 35 * gameScale;
+            // Mobilde boruyu aşağı uzat (Joint halkasının altına kadar)
+            const extraReach = isMob ? 25 * gameScale : 35 * gameScale;
             ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight + extraReach);
         }
 
@@ -1297,8 +1297,8 @@ class Pipe {
         }
 
         if (ASSETS.images.pipeLower) {
-            // Mobilde boruyu yukarı uzat
-            const extraReach = isMob ? 45 * gameScale : 0;
+            // Mobilde boruyu yukarı uzat (Halkayı çok geçmeyecek şekilde)
+            const extraReach = isMob ? 25 * gameScale : 0;
             ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY - extraReach, w, this.lowerHeight + extraReach + 50);
         }
 
