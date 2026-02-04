@@ -1149,24 +1149,149 @@ class Ball {
     }
 }
 
+// Mobil görünüm tespiti (Dikey mod veya tablet genişliği)
+function isMobileView() {
+    return window.innerWidth < 1024 || window.innerHeight > window.innerWidth;
+}
+
+// ==================== TABANCA (GUN) SİSTEMİ ====================
+// Gövde + Pompa (kırmızı huni) SAĞDA + Bacak vidada
+class Gun {
+    constructor() {
+        // Görsel boyutları (temel değerler ölçekle çarpılacak)
+        this.baseCatcherWidth = 180;
+        this.baseCatcherHeight = 125;
+        this.baseLegWidth = 70;
+        this.baseLegHeight = 50;
+
+        this.updatePosition();
+        this.rotation = 0;
+        this.rotationTime = 0;
+        this.pumpOffset = 0;
+        this.pumpDirection = 1;
+    }
+
+    updatePosition() {
+        // Ölçeklendirilmiş boyutlar
+        this.catcherWidth = this.baseCatcherWidth * gameScale;
+        this.catcherHeight = this.baseCatcherHeight * gameScale;
+        this.legWidth = this.baseLegWidth * gameScale;
+        this.legHeight = this.baseLegHeight * gameScale;
+
+        // Pivot noktası
+        const isMob = isMobileView();
+        const xOffset = isMob ? 0.30 : 0.22;
+        this.pivotX = canvasWidth * xOffset;
+
+        // Dikey modda veya dar ekranda uçurum kenarı hizası (%38 alttan -> 0.62 üstten)
+        const pivotPct = isMob ? 0.62 : 0.68;
+        this.pivotY = canvasHeight * pivotPct;
+
+        // Debug bilgisi
+        const debugLabel = document.getElementById('debug-pivot');
+        if (debugLabel) {
+            debugLabel.textContent = `Y: ${Math.round(pivotPct * 100)}% | Mob: ${isMob}`;
+        }
+    }
+
+    update() {
+        // Yukarı-aşağı salınım (yukarı doğru offset'li)
+        this.rotationTime += CONFIG.GUN_ROTATION_SPEED;
+        const baseAngle = -20 * Math.PI / 180;  // Temel açı: her iki boşluğa da ulaşabilecek
+        this.rotation = baseAngle + Math.sin(this.rotationTime) * (CONFIG.GUN_ROTATION_RANGE * Math.PI / 180);
+
+        // Pompa ileri-geri
+        this.pumpOffset += 0.5 * this.pumpDirection;
+        if (this.pumpOffset > 15 || this.pumpOffset < 0) {
+            this.pumpDirection *= -1;
+        }
+    }
+
+    draw() {
+        ctx.save();
+        ctx.translate(this.pivotX, this.pivotY);
+
+        // 1. Bacak (çimene sabit, DÖNMEZ - Tam pivotun altına ortalandı)
+        if (ASSETS.images.catcherLeg) {
+            ctx.drawImage(
+                ASSETS.images.catcherLeg,
+                -this.legWidth / 2,
+                -15 * gameScale, // Biraz daha yukarı çekerek vidayla birleştirdik
+                this.legWidth,
+                this.legHeight + (60 * gameScale)
+            );
+        }
+
+        // 2. Dönen kısım (gövde + pompa)
+        ctx.save();
+        ctx.rotate(this.rotation);
+
+        // 3. Gövde (catcher.png) 
+        // Vidanın yerini tam tutturmak için gövdeyi sağa kaydırdık (-165 -> -95)
+        if (ASSETS.images.catcher) {
+            ctx.drawImage(
+                ASSETS.images.catcher,
+                -95 * gameScale,
+                -92 * gameScale,
+                this.catcherWidth,
+                this.catcherHeight
+            );
+        }
+
+        // 4. Pompa ve İp hizalaması (Gövdenin yeni yerine göre güncellendi)
+        const pWidth = 80 * gameScale;
+        const pHeight = 55 * gameScale;
+
+        // İp başlangıç noktası (Gövde sağa kayınca rStartX arttı: 5 -> 70)
+        const rStartX = 70 * gameScale;
+        const rY = -40 * gameScale; // Biraz aşağı indirildi (-48 -> -40)
+
+        const pX = rStartX + (50 * gameScale);
+        const pY = rY - (pHeight / 2);
+
+        // Plunger aktif değilse pompa yerinde
+        if (typeof plunger === 'undefined' || !plunger.active) {
+            // Düz ip çiz
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = 3 * gameScale;
+            ctx.beginPath();
+            ctx.moveTo(rStartX, rY);
+            ctx.lineTo(pX, rY);
+            ctx.stroke();
+
+            // Pompa (pump.png)
+            if (ASSETS.images.pump) {
+                ctx.drawImage(
+                    ASSETS.images.pump,
+                    pX - (10 * gameScale),
+                    pY,
+                    80 * gameScale,
+                    55 * gameScale
+                );
+            }
+        }
+        ctx.restore();
+        ctx.restore();
+    }
+}
+
 // ==================== TÜP (PIPE) SİSTEMİ - GÖRSEL TABANLI ====================
 // Tarife göre: Üst bölüm (2 hayvan) + Orta bölüm (2 hayvan) + Alt bölüm (2 hayvan)
 class Pipe {
     constructor() {
         this.balls = [];
-        // Mobilde daha fazla hayvan (zemine ulaşması için)
-        this.animalCount = window.innerWidth < 768 ? 22 : 14;
+        // Mobilde daha fazla hayvan
+        this.animalCount = isMobileView() ? 22 : 14;
 
-        // Güvenli varsayılanlar (updatePosition ile güncellenecek)
-        this.x = canvasWidth ? canvasWidth * 0.88 : 800;
-        this.pipeWidth = 95;
-        this.capWidth = 115;
-        this.ovalRingWidth = 125;
-        this.animalSize = 75;
-        this.animalSpacing = 70;
-        this.upperHeight = 240;
-        this.midHeight = 100;
-        this.lowerHeight = 220;
+        this.x = 0;
+        this.pipeWidth = 0;
+        this.capWidth = 0;
+        this.ovalRingWidth = 0;
+        this.animalSize = 0;
+        this.animalSpacing = 0;
+        this.upperHeight = 0;
+        this.midHeight = 0;
+        this.lowerHeight = 0;
 
         this.gap1Start = 0;
         this.gap1End = 0;
@@ -1177,9 +1302,8 @@ class Pipe {
     }
 
     updatePosition() {
-        const isMobile = window.innerWidth < 768;
-        // Mobilde tüp biraz daha içeride olsun
-        const xOffset = isMobile ? 0.82 : 0.88;
+        const isMob = isMobileView();
+        const xOffset = isMob ? 0.82 : 0.88;
         this.x = canvasWidth * xOffset;
 
         // Boyutları güncelle
@@ -1190,30 +1314,27 @@ class Pipe {
         this.animalSpacing = 70 * gameScale;
 
         // Yükseklik limitleri ve dinamik hesaplama (Mobilde 2'şer hayvanlık boşluk bırakmak için)
-        if (isMobile) {
+        if (isMob) {
             const baseTotalHeight = canvasHeight / gameScale;
-            const yOffsetBase = 20; // isMobile ? 20 : -80
-            const targetGapBase = 80; // ÇOK DAHA dar boşluk (110 -> 80) - Boruları merkeze iyice yaklaştırır
+            const yOffsetBase = 20;
+            const targetGapBase = 140; // 2 hayvanlık boşluk (2 * 70)
             const midRingBase = 100;
 
-            // Toplam boşluk (Üst boşluk + Alt boşluk + Orta halka)
             const totalRequiredGap = (targetGapBase * 2) + midRingBase;
             const remainingForPipes = baseTotalHeight - yOffsetBase - totalRequiredGap;
 
-            // Boruları kalan mesafeye göre paylaştır (Üst boru biraz daha kısa olabilir)
             this.upperHeight = (remainingForPipes * 0.45) * gameScale;
             this.lowerHeight = (remainingForPipes * 0.55) * gameScale;
             this.midHeight = midRingBase * gameScale;
 
-            // Debug bilgisini güncelle (UH: UpperHeight, LH: LowerHeight)
             const debugLabel = document.getElementById('debug-pivot');
             if (debugLabel) {
-                const curText = debugLabel.textContent.split('|')[0];
-                debugLabel.textContent = `${curText} | UH:${Math.round(this.upperHeight / gameScale)} LH:${Math.round(this.lowerHeight / gameScale)}`;
+                const curText = debugLabel.textContent.split('|')[0] + '|' + debugLabel.textContent.split('|')[1];
+                debugLabel.textContent = `${curText} | PipeMob: true`;
             }
         } else {
             const uHeight = 350;
-            const lHeight = 420; // PC'de tüpü biraz kısalttık (500 -> 420)
+            const lHeight = 420;
             this.upperHeight = uHeight * gameScale;
             this.midHeight = 100 * gameScale;
             this.lowerHeight = lHeight * gameScale;
@@ -1222,20 +1343,13 @@ class Pipe {
 
     // Tüpü çiz - Tarife göre katman katman
     draw(ctx) {
-        if (!this.debugLogged) {
-            console.log('Pipe.draw - x:', this.x, 'balls:', this.balls.length);
-            this.debugLogged = true;
-        }
-
         const x = this.x;
         const w = this.pipeWidth;
         const capW = this.capWidth;
         const ovalW = this.ovalRingWidth;
 
-        // Y pozisyonları
-        // Mobilde tüpü biraz daha aşağıdan başlat
-        const isMobile = window.innerWidth < 768;
-        const yOffset = isMobile ? 20 : -80; // PC'de biraz aşağı kaydırdık (-100 -> -80) ortalamak için
+        const isMob = isMobileView();
+        const yOffset = isMob ? 20 : -80;
         const upperY = yOffset * gameScale;
 
         // Alt tüp sayfanın EN ALTINA yapışık
@@ -1246,42 +1360,29 @@ class Pipe {
         const gapSize = lowerY - upperEnd;
         const midY = upperEnd + (gapSize - this.midHeight) / 2;
 
-        // Gap (yakalanabilir bölge) koordinatlarını kaydet
-        this.gap1Start = upperEnd;           // Üst tüp sonu
-        this.gap1End = midY;                 // Orta yüzük başı
-        this.gap2Start = midY + this.midHeight;  // Orta yüzük sonu
-        this.gap2End = lowerY;               // Alt tüp başı
+        this.gap1Start = upperEnd;
+        this.gap1End = midY;
+        this.gap2Start = midY + this.midHeight;
+        this.gap2End = lowerY;
 
         // ========================================
-        // ADIM 1: TÜM ARKA PARÇALARI ÇİZ (EN ARKADA)
+        // ADIM 1: TÜM ARKA PARÇALARI ÇİZ
         // ========================================
 
-        // Üst tüpün ALT kısmına halka (BÜYÜK oval halka)
         if (ASSETS.images.pipeMidUpperBack) {
-            // Biraz aşağı taşıdık (-20 -> -5)
             ctx.drawImage(ASSETS.images.pipeMidUpperBack, x - ovalW / 2, upperY + this.upperHeight - (5 * gameScale), ovalW, 50 * gameScale);
-        }
-
-        // Orta yüzük ÜST arka (üst kenarı düzeltmek için)
-        if (ASSETS.images.pipeMidUpperBack) {
             ctx.drawImage(ASSETS.images.pipeMidUpperBack, x - ovalW / 2, midY - 15, ovalW, 40);
         }
 
-        // Orta yüzük ALT arka (BÜYÜK oval halka - alt tüpteki gibi)
         if (ASSETS.images.pipeLowerBack) {
             ctx.drawImage(ASSETS.images.pipeLowerBack, x - ovalW / 2, midY + this.midHeight - 25, ovalW, 50);
-        }
-
-        // Alt tüp üst arka (BÜYÜK oval halka)
-        if (ASSETS.images.pipeLowerBack) {
             ctx.drawImage(ASSETS.images.pipeLowerBack, x - ovalW / 2, lowerY - 20, ovalW, 50);
         }
 
         // ========================================
-        // ADIM 2: HAYVANLARI ÇİZ (EN ALT KATMAN - TÜP İÇİNDE)
+        // ADIM 2: HAYVANLARI ÇİZ
         // ========================================
         ctx.save();
-        // Hayvanlar tüpün dışına taşmamalı
         ctx.beginPath();
         ctx.rect(x - w / 2, 0, w, canvasHeight);
         ctx.clip();
@@ -1306,26 +1407,22 @@ class Pipe {
         ctx.restore();
 
         // ========================================
-        // ADIM 3: ANA TÜP GÖVDELERİNİ ÇİZ (HAYVANLARIN ÜSTÜNDE)
+        // ADIM 3: ANA TÜP GÖVDELERİ
         // ========================================
 
-        // 1. Üst ana boru (long_upper_pipe)
         if (ASSETS.images.pipeUpper) {
-            // EKSTREM UZATMA: Mobilde boruyu ÇOK DAHA aşağı uzatıyoruz (60 -> 150)
-            const extraReach = isMobile ? 150 * gameScale : 35 * gameScale;
+            // Mobilde boruyu aşağı uzat (Yeterli reach ile)
+            const extraReach = isMob ? 45 * gameScale : 35 * gameScale;
             ctx.drawImage(ASSETS.images.pipeUpper, x - w / 2, upperY, w, this.upperHeight + extraReach);
         }
 
-        // 2. Orta yüzük (mid_pipe)
         if (ASSETS.images.pipeMidRing) {
-            // Boşluk kapanması için orta boruyu da biraz daha uzun çiziyoruz
             ctx.drawImage(ASSETS.images.pipeMidRing, x - w / 2, midY, w, this.midHeight + (15 * gameScale));
         }
 
-        // 3. Alt ana boru (lower_pipe)
         if (ASSETS.images.pipeLower) {
-            // EKSTREM UZATMA: Mobilde boruyu ÇOK DAHA yukarı uzatıyoruz (60 -> 150)
-            const extraReach = isMobile ? 150 * gameScale : 0;
+            // Mobilde boruyu yukarı uzat
+            const extraReach = isMob ? 45 * gameScale : 0;
             ctx.drawImage(ASSETS.images.pipeLower, x - w / 2, lowerY - extraReach, w, this.lowerHeight + extraReach + 50);
         }
 
