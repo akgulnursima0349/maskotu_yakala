@@ -669,8 +669,8 @@ class Gun {
         const xOffset = isMobile ? 0.30 : 0.22;
         this.pivotX = canvasWidth * xOffset;
 
-        // Dikey modda veya dar ekranda (isMobile) uçurum kenarı hizası (%35 alttan -> 0.65 üstten)
-        const pivotPct = (isPortrait || isMobile) ? 0.65 : 0.68;
+        // Dikey modda veya dar ekranda (isMobile) uçurum kenarı hizası (%38 alttan -> 0.62 üstten)
+        const pivotPct = (isPortrait || isMobile) ? 0.62 : 0.68;
         this.pivotY = canvasHeight * pivotPct;
 
         // Debug bilgisi
