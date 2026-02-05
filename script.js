@@ -549,11 +549,12 @@ function initGroundAnimals() {
     });
 
     // En öndeki (en büyük) - Tavuk
+    const isMob = isMobileView();
     groundAnimals.push({
         type: 'chicken',
-        x: 0.15, // Kullanıcı isteğiyle sola çekildi (0.20 -> 0.15)
-        y: 0.69, // Kullanıcı isteğiyle 0.69'a çekildi
-        size: 90 * gameScale,
+        x: 0.15,
+        y: isMob ? 0.69 : 0.72, // PC'de biraz daha aşağıda (0.69 -> 0.72)
+        size: (isMob ? 90 : 140) * gameScale, // PC'de daha büyük (90 -> 140)
         state: 'static',
         blinkTimer: Math.random() * 2000 + 1000,
         isBlinking: false,
