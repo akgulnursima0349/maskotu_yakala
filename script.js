@@ -1332,8 +1332,8 @@ class Pipe {
 
         // 4. Alt tüp üst eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Kullanıcı isteği: Biraz daha daraltıldı (170 -> 150)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (150 * pS) / 2, lowerY - (8 * gameScale), 150 * pS, 72 * pS);
+            // Kullanıcı isteği: Minicik daha daraltıldı (150 -> 144)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (144 * pS) / 2, lowerY - (8 * gameScale), 144 * pS, 72 * pS);
         }
     }
 
