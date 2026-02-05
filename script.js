@@ -1025,8 +1025,8 @@ class Gun {
     updatePosition() {
         // Pivot noktası
         const isMob = isMobileView();
-        // Catcher Ölçeği (PC: 3x, Mob: 1x)
-        this.cScale = isMob ? gameScale : (gameScale * 3.0);
+        // Catcher Ölçeği (PC: 1.5x, Mob: 1x)
+        this.cScale = isMob ? gameScale : (gameScale * 1.5);
         const cS = this.cScale;
 
         // Ölçeklendirilmiş boyutlar
