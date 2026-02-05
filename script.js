@@ -518,7 +518,7 @@ function initGroundAnimals() {
     // En arkadaki (en küçük)
     groundAnimals.push({
         type: 'rabbit',
-        x: 0.05,
+        x: isMob ? 0.03 : 0.05, // Mobilde biraz daha sola (0.05 -> 0.03)
         y: 0.65, // Görece yukarıda (arka)
         size: (isMob ? 45 : 70) * gameScale, // PC'de daha büyük (45 -> 70)
         state: 'static',
@@ -535,7 +535,7 @@ function initGroundAnimals() {
     // Ortadaki
     groundAnimals.push({
         type: 'cat',
-        x: 0.12,
+        x: isMob ? 0.07 : 0.12, // Mobilde biraz daha sola (0.12 -> 0.07)
         y: 0.66, // Kullanıcı isteğiyle 0.66'ya çekildi
         size: (isMob ? 65 : 95) * gameScale, // PC'de daha büyük (65 -> 95)
         state: 'static',
@@ -552,7 +552,7 @@ function initGroundAnimals() {
     // En öndeki (en büyük) - Tavuk
     groundAnimals.push({
         type: 'chicken',
-        x: 0.15,
+        x: isMob ? 0.08 : 0.15, // Mobilde sola kaydırıldı (0.15 -> 0.08)
         y: isMob ? 0.69 : 0.75, // PC'de daha da aşağıda (0.72 -> 0.75)
         size: (isMob ? 90 : 140) * gameScale, // PC'de daha büyük (90 -> 140)
         state: 'static',
