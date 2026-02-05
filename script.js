@@ -1320,14 +1320,14 @@ class Pipe {
 
         // 2. Orta yüzük ÜST eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Kullanıcı isteği: Biraz daha daraltıldı (160 -> 148)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * pS) / 2, midY - (5 * gameScale), 148 * pS, 52 * pS);
+            // Kullanıcı isteği: Minicik daha daraltıldı (148 -> 142)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY - (5 * gameScale), 142 * pS, 52 * pS);
         }
 
         // 3. Orta yüzük ALT eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Kullanıcı isteği: Biraz daha daraltıldı (160 -> 148)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (148 * pS) / 2, midY + this.midHeight - (15 * gameScale), 148 * pS, 64 * pS);
+            // Kullanıcı isteği: Minicik daha daraltıldı (148 -> 142)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY + this.midHeight - (15 * gameScale), 142 * pS, 64 * pS);
         }
 
         // 4. Alt tüp üst eklemi
