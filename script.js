@@ -553,7 +553,7 @@ function initGroundAnimals() {
     groundAnimals.push({
         type: 'chicken',
         x: 0.15,
-        y: isMob ? 0.69 : 0.72, // PC'de biraz daha aşağıda (0.69 -> 0.72)
+        y: isMob ? 0.69 : 0.75, // PC'de daha da aşağıda (0.72 -> 0.75)
         size: (isMob ? 90 : 140) * gameScale, // PC'de daha büyük (90 -> 140)
         state: 'static',
         blinkTimer: Math.random() * 2000 + 1000,
