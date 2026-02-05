@@ -1179,15 +1179,17 @@ class Pipe {
 
     updatePosition() {
         const isMob = isMobileView();
-        const xOffset = isMob ? 0.82 : 0.88;
+        // PC ekranı için devasa büyüme (Tüpler ve her şey ~3 kat daha büyük)
+        const pScale = isMob ? gameScale : (gameScale * 2.8);
+        const xOffset = isMob ? 0.82 : 0.75; // Genişleyen boruyu sığdırmak için sola çektik
         this.x = canvasWidth * xOffset;
 
-        // Boyutları güncelle
-        this.pipeWidth = 95 * gameScale;
-        this.capWidth = 115 * gameScale;
-        this.ovalRingWidth = 125 * gameScale;
-        this.animalSize = 75 * gameScale;
-        this.animalSpacing = 70 * gameScale;
+        // Boyutları güncelle (pScale bazlı)
+        this.pipeWidth = 95 * pScale;
+        this.capWidth = 115 * pScale;
+        this.ovalRingWidth = 125 * pScale;
+        this.animalSize = 75 * pScale;
+        this.animalSpacing = 70 * pScale;
 
         // Yükseklik limitleri ve dinamik hesaplama (Mobilde 2'şer hayvanlık boşluk bırakmak için)
         if (isMob) {
@@ -1209,11 +1211,12 @@ class Pipe {
                 debugLabel.textContent = `${curText} | PipeMob: true`;
             }
         } else {
-            const uHeight = 350;
-            const lHeight = 420;
-            this.upperHeight = uHeight * gameScale;
-            this.midHeight = 100 * gameScale;
-            this.lowerHeight = lHeight * gameScale;
+            // PC için yükseklikler (pScale'e göre dengelendi)
+            const uHeight = 280; // Üstü biraz kısalttık ki gapler sığsın
+            const lHeight = 350;
+            this.upperHeight = uHeight * pScale;
+            this.midHeight = 80 * pScale;
+            this.lowerHeight = lHeight * pScale;
         }
     }
 
