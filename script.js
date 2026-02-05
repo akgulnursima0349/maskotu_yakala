@@ -1211,7 +1211,7 @@ class Pipe {
             const baseTotalHeight = canvasHeight / pScale;
             const yOffsetBase = -50; // PC'de üst boşluk daha az
             const targetGapBase = 140;
-            const midRingBase = 100;
+            const midRingBase = 80; // Kullanıcı isteği: Boyu kısaltıldı (100 -> 80)
 
             const totalRequiredGap = (targetGapBase * 2) + midRingBase;
             const remainingForPipes = Math.max(200, baseTotalHeight - yOffsetBase - totalRequiredGap);
@@ -1237,9 +1237,12 @@ class Pipe {
         const lowerY = canvasHeight - this.lowerHeight;
 
         // Orta yüzük - iki tüpün TAM ORTASINDA
+        // Orta yüzük - PC'de biraz daha aşağı kaydırıldı (Denge için)
         const upperEnd = upperY + this.upperHeight;
         const gapSize = lowerY - upperEnd;
-        const midY = upperEnd + (gapSize - this.midHeight) / 2;
+        const pS = this.pScale || gameScale;
+        const midShift = isMob ? 0 : (25 * pS); // PC'de aşağı taşıma miktarı
+        const midY = upperEnd + (gapSize - this.midHeight) / 2 + midShift;
 
         this.gap1Start = upperEnd;
         this.gap1End = midY;
@@ -1310,7 +1313,7 @@ class Pipe {
         // ========================================
         // ADIM 4: TÜM ÖN PARÇALARI ÇİZ (EN ÜSTTE - HER ŞEYİN ÜSTÜNDE)
         // ========================================
-        const pS = this.pScale || gameScale;
+        // pS yukarıda tanımlandı, tekrar tanımlamaya gerek yok
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
