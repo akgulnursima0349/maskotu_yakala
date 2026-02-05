@@ -1014,32 +1014,32 @@ body {
 @media (max-width: 900px) {
     .intro-container {
         flex-direction: column !important;
-        /* Dikey dizilimi zorla */
         height: 100vh !important;
         width: 100vw !important;
         padding: 0 !important;
         gap: 0 !important;
         display: flex !important;
+        justify-content: center !important;
     }
 
-    /* ÜST KISIM (Yukarı): Başlık ve Kurallar (%50) */
+    /* ÜST KISIM (Yukarı): Başlık ve Kurallar */
     .intro-left {
         order: 1 !important;
+        flex: 1 1 50vh !important;
         height: 50vh !important;
-        flex: 0 0 50vh !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         width: 100% !important;
-        gap: 2vh !important;
+        gap: 1vh !important;
     }
 
-    /* ALT KISIM (Aşağı): Animasyon ve Buton (%50) */
+    /* ALT KISIM (Aşağı): Animasyon ve Buton */
     .intro-right {
         order: 2 !important;
+        flex: 1 1 50vh !important;
         height: 50vh !important;
-        flex: 0 0 50vh !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
