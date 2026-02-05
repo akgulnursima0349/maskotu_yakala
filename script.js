@@ -1031,8 +1031,8 @@ class Gun {
 
         // Pivot noktası
         const isMob = isMobileView();
-        // Catcher'ı biraz daha sola çekiyoruz (0.22 -> 0.18)
-        const xOffset = 0.18;
+        // Catcher'ı PC'de sağa çekiyoruz (Mob: 0.18, PC: 0.28)
+        const xOffset = isMob ? 0.18 : 0.28;
         this.pivotX = canvasWidth * xOffset;
 
         // Dikey modda veya dar ekranda uçurum kenarı hizası (%38 alttan -> 0.62 üstten)
