@@ -1032,8 +1032,12 @@ class Gun {
         // Ölçeklendirilmiş boyutlar
         this.catcherWidth = this.baseCatcherWidth * cS;
         this.catcherHeight = this.baseCatcherHeight * cS;
-        this.legWidth = this.baseLegWidth * cS;
-        this.legHeight = this.baseLegHeight * cS;
+
+        // Bacak parçası PC'de biraz daha büyük olsun (Ekstra 1.3x)
+        const legS = isMob ? cS : (cS * 1.3);
+        this.legWidth = this.baseLegWidth * legS;
+        this.legHeight = this.baseLegHeight * legS;
+        this.legS = legS; // Çizimde kullanmak için
 
         // Pivot noktası
         // (isMob yukarıda tanımlandı)
@@ -1069,15 +1073,16 @@ class Gun {
         ctx.translate(this.pivotX, this.pivotY);
 
         const cS = this.cScale || gameScale;
+        const legS = this.legS || cS;
 
         // 1. Bacak (çimene sabit, DÖNMEZ - Tam pivotun altına ortalandı)
         if (ASSETS.images.catcherLeg) {
             ctx.drawImage(
                 ASSETS.images.catcherLeg,
                 -this.legWidth / 2,
-                -15 * cS, // Boyutla orantılı kaydırma
+                -15 * legS, // Kendi ölçeğiyle orantılı kaydırma
                 this.legWidth,
-                this.legHeight + (60 * cS)
+                this.legHeight + (60 * legS)
             );
         }
 
