@@ -1217,7 +1217,7 @@ class Pipe {
             const remainingForPipes = Math.max(200, baseTotalHeight - yOffsetBase - totalRequiredGap);
 
             this.upperHeight = (remainingForPipes * 0.40) * pScale;
-            this.lowerHeight = (remainingForPipes * 0.60) * pScale;
+            this.lowerHeight = (remainingForPipes * 0.50) * pScale; // Kullanıcı isteği: Boyu kısaltıldı (0.60 -> 0.50)
             this.midHeight = midRingBase * pScale;
         }
     }
