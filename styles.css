@@ -1014,32 +1014,59 @@ body {
 @media (max-width: 900px) {
     .intro-container {
         flex-direction: column;
-        height: auto;
-        padding: 20px;
-        gap: 20px;
+        height: 100vh;
+        width: 100vw;
+        padding: 5vh 5vw;
+        gap: 2vh;
+        justify-content: space-between;
+        /* Üst ve altı ayır */
+    }
+
+    .intro-left {
+        order: 1;
+        /* Title ve Kurallar üstte */
+        width: 100%;
+        gap: 2vh;
+    }
+
+    .intro-right {
+        order: 2;
+        /* Animasyon ve Buton altta */
+        width: 100%;
+        margin-top: 0;
+        gap: 3vh;
     }
 
     .rules-box {
-        padding: 25px;
+        padding: 20px;
+        max-width: 90%;
+        border-width: 3px;
     }
 
     .game-title {
-        font-size: 2rem;
+        font-size: min(12vw, 4rem);
+        /* Daha büyük başlık */
+        margin-bottom: 10px;
     }
 
     .rule-item {
-        padding: 12px;
-        font-size: 1rem;
+        padding: 15px;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
     }
 
     .intro-animation {
-        width: 380px;
-        height: 320px;
+        width: 85vw;
+        height: 30vh;
+        max-height: 300px;
     }
 
     .play-btn {
-        padding: 15px 40px;
-        font-size: 1.5rem;
+        padding: 20px 0;
+        width: 80%;
+        font-size: 2.2rem;
+        /* Daha büyük buton */
+        border-radius: 60px;
     }
 
     .top-center-ui {
