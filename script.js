@@ -1335,7 +1335,6 @@ class Pipe {
 
         // ========================================
         // ADIM 4: TÜM ÖN PARÇALARI ÇİZ (EN ÜSTTE - HER ŞEYİN ÜSTÜNDE)
-        const pS = this.pScale || gameScale;
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
