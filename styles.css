@@ -837,22 +837,25 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 1.5vh;
+    /* Gap düşürüldü */
     z-index: 10;
     text-align: center;
     animation: celebrationPop 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .trophy-img {
-    width: min(50vw, 350px);
-    height: auto;
+    width: auto;
+    height: min(35vh, 320px);
+    /* Yüksekliğe göre sınırlandırıldı */
     filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4));
     animation: trophyFloat 3s ease-in-out infinite;
 }
 
 .celebration-title {
     font-family: 'Fredoka One', cursive;
-    font-size: min(10vw, 4.5rem);
+    font-size: min(8vh, 4rem);
+    /* Yüksekliğe göre sınırlandırıldı */
     color: #FFD700;
     text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2), 0 0 30px rgba(255, 215, 0, 0.5);
     margin: 0;
@@ -878,14 +881,16 @@ body {
 
 #celebration-screen #final-score-value {
     font-family: 'Fredoka One', cursive;
-    font-size: min(15vw, 6rem);
+    font-size: min(12vh, 5.5rem);
+    /* Biraz küçültüldü */
     color: #FF6B35;
     margin: 0;
     line-height: 1;
 }
 
 .celebration-restart {
-    margin-top: 30px;
+    margin-top: 15px;
+    /* Boşluk azaltıldı */
 }
 
 .restart-icon {
