@@ -1012,7 +1012,9 @@ body {
 }
 
 @media (max-width: 900px) {
-    .intro-container {
+
+    /* MOBİL İÇİN ULTRA-GÜÇLÜ KURALLAR - PC'yi BOZMAZ */
+    body #intro-screen .intro-container {
         flex-direction: column !important;
         height: 100vh !important;
         width: 100vw !important;
@@ -1020,10 +1022,12 @@ body {
         gap: 0 !important;
         display: flex !important;
         justify-content: center !important;
+        /* DEBUG ÇİZGİSİ: Eğer kırmızı çerçeve görüyorsan kod yüklenmiştir */
+        outline: 5px solid red !important;
     }
 
     /* ÜST KISIM (Yukarı): Başlık ve Kurallar */
-    .intro-left {
+    body #intro-screen .intro-left {
         order: 1 !important;
         flex: 1 1 50vh !important;
         height: 50vh !important;
@@ -1036,7 +1040,7 @@ body {
     }
 
     /* ALT KISIM (Aşağı): Animasyon ve Buton */
-    .intro-right {
+    body #intro-screen .intro-right {
         order: 2 !important;
         flex: 1 1 50vh !important;
         height: 50vh !important;
