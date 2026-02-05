@@ -1326,8 +1326,8 @@ class Pipe {
 
         // 3. Orta yüzük ALT eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Kullanıcı isteği: Minicik daha daraltıldı (148 -> 142)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY + this.midHeight - (15 * gameScale), 142 * pS, 64 * pS);
+            // Kullanıcı isteği: Aşağı doğru eni (yüksekliği) daraltıldı (64 -> 56)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY + this.midHeight - (15 * gameScale), 142 * pS, 56 * pS);
         }
 
         // 4. Alt tüp üst eklemi
