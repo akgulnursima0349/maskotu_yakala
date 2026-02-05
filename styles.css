@@ -1016,65 +1016,67 @@ body {
         flex-direction: column;
         height: 100vh;
         width: 100vw;
-        padding: 2vh 5vw;
-        /* Üstten alttan biraz boşluk */
+        padding: 0;
         gap: 0;
-        justify-content: center;
-        /* Genel ortalama */
+        justify-content: flex-start;
+        display: flex !important;
     }
 
-    /* ÜST YARI: Başlık ve Kurallar */
+    /* ÜST YARI: Başlık ve Kurallar (%50) */
     .intro-left {
         order: 1;
-        flex: 1;
-        /* Ekranın yarısını kapla */
-        display: flex;
+        height: 50vh !important;
+        flex: 0 0 50vh !important;
+        display: flex !important;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
         gap: 2vh;
+        background: rgba(255, 255, 255, 0.05);
+        /* Yardımcı görsel ayrım */
     }
 
-    /* ALT YARI: Animasyon ve Butun */
+    /* ALT YARI: Animasyon ve Buton (%50) */
     .intro-right {
         order: 2;
-        flex: 1;
-        /* Ekranın diğer yarısını kapla */
-        display: flex;
+        height: 50vh !important;
+        flex: 0 0 50vh !important;
+        display: flex !important;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
         margin-top: 0;
-        gap: 3vh;
+        gap: 2vh;
     }
 
     .rules-box {
-        padding: 20px;
-        width: 90%;
-        max-width: 450px;
+        padding: 15px;
+        width: 85%;
+        max-width: 400px;
         border-width: 3px;
     }
 
     .game-title {
-        font-size: min(15vw, 4.5rem);
-        /* Dev başlık */
+        font-size: min(14vw, 3.8rem) !important;
         margin-bottom: 5px;
+        line-height: 1;
     }
 
     .rule-item {
-        padding: 12px;
-        font-size: 1.1rem;
-        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 1.05rem;
+        margin-bottom: 8px;
     }
 
     .intro-animation {
         width: 100%;
-        height: 30vh;
-        max-height: 350px;
+        height: 25vh !important;
+        max-height: 250px;
         display: flex;
         justify-content: center;
+        margin-bottom: 1vh;
     }
 
     #introCanvas {
@@ -1084,12 +1086,11 @@ body {
     }
 
     .play-btn {
-        padding: 20px 0;
-        width: 85%;
-        max-width: 400px;
-        font-size: 2.22rem;
-        /* Büyük oyna butonu */
-        border-radius: 60px;
+        padding: 15px 0 !important;
+        width: 75% !important;
+        max-width: 350px;
+        font-size: 2rem !important;
+        border-radius: 50px;
     }
 
     .top-center-ui {
