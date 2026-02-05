@@ -1103,8 +1103,9 @@ class Gun {
         }
 
         // 4. Pompa ve İp hizalaması
-        const pWidth = 80 * cS;
-        const pHeight = 55 * cS;
+        const pumpS = this.pumpS || cS;
+        const pWidth = 80 * pumpS;
+        const pHeight = 55 * pumpS;
 
         // İp başlangıç noktası
         const rStartX = 70 * cS;
@@ -1129,8 +1130,8 @@ class Gun {
                     ASSETS.images.pump,
                     pX - (10 * cS),
                     pY,
-                    80 * cS,
-                    55 * cS
+                    pWidth,
+                    pHeight
                 );
             }
         }
@@ -1141,7 +1142,9 @@ class Gun {
     // Pompanın uç noktası (ateşleme başlangıcı)
     getPlungerStartPos() {
         const cS = this.cScale || gameScale;
-        const pEndX = (70 + 50 + 70) * cS;
+        const pumpS = this.pumpS || cS;
+        // Pompaya göre hizalama (70 gövde + 50 ara + 70 pompa ucu)
+        const pEndX = (70 * cS) + (50 * cS) + (70 * pumpS);
         const pEndY = -40 * cS;
         const cosR = Math.cos(this.rotation);
         const sinR = Math.sin(this.rotation);
