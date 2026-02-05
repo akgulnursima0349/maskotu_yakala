@@ -1314,8 +1314,8 @@ class Pipe {
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Ölçüleri orantılı büyütüldü (142 -> 152 en, 44 -> 50 boy)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (152 * pS) / 2, upperY + this.upperHeight + (5 * gameScale), 152 * pS, 50 * pS);
+            // Kullanıcı isteği: Kenarlardan biraz daraltıldı (152 -> 142)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, upperY + this.upperHeight + (5 * gameScale), 142 * pS, 50 * pS);
         }
 
         // 2. Orta yüzük ÜST eklemi
