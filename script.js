@@ -510,61 +510,60 @@ function initClouds() {
 // ==================== ZEMİN HAYVANLARI (PERSPEKTİFLİ) ====================
 const groundAnimals = [];
 
-function initGroundAnimals() {
-    groundAnimals.length = 0;
+const isMob = isMobileView();
 
-    // 3 hayvan: önden arkaya doğru küçülen (perspektif)
-    // En arkadaki (en küçük)
-    groundAnimals.push({
-        type: 'rabbit',
-        x: 0.05,
-        y: 0.65, // Görece yukarıda (arka)
-        size: 45 * gameScale,
-        state: 'static',
-        blinkTimer: Math.random() * 2000,
-        isBlinking: false,
-        // Animasyon özellikleri
-        jumpY: 0,
-        jumpVelY: 0,
-        jumpTimer: Math.random() * 5000 + 2000,
-        swayPhase: Math.random() * Math.PI * 2,
-        swaySpeed: 0.002 + Math.random() * 0.001
-    });
+// 3 hayvan: önden arkaya doğru küçülen (perspektif)
+// En arkadaki (en küçük)
+groundAnimals.push({
+    type: 'rabbit',
+    x: 0.05,
+    y: 0.65, // Görece yukarıda (arka)
+    size: (isMob ? 45 : 70) * gameScale, // PC'de daha büyük (45 -> 70)
+    state: 'static',
+    blinkTimer: Math.random() * 2000,
+    isBlinking: false,
+    // Animasyon özellikleri
+    jumpY: 0,
+    jumpVelY: 0,
+    jumpTimer: Math.random() * 5000 + 2000,
+    swayPhase: Math.random() * Math.PI * 2,
+    swaySpeed: 0.002 + Math.random() * 0.001
+});
 
-    // Ortadaki
-    groundAnimals.push({
-        type: 'cat',
-        x: 0.12,
-        y: 0.66, // Kullanıcı isteğiyle 0.66'ya çekildi
-        size: 65 * gameScale,
-        state: 'static',
-        blinkTimer: Math.random() * 2000 + 500,
-        isBlinking: false,
-        // Animasyon özellikleri
-        jumpY: 0,
-        jumpVelY: 0,
-        jumpTimer: Math.random() * 5000 + 3000,
-        swayPhase: Math.random() * Math.PI * 2,
-        swaySpeed: 0.002 + Math.random() * 0.001
-    });
+// Ortadaki
+groundAnimals.push({
+    type: 'cat',
+    x: 0.12,
+    y: 0.66, // Kullanıcı isteğiyle 0.66'ya çekildi
+    size: (isMob ? 65 : 95) * gameScale, // PC'de daha büyük (65 -> 95)
+    state: 'static',
+    blinkTimer: Math.random() * 2000 + 500,
+    isBlinking: false,
+    // Animasyon özellikleri
+    jumpY: 0,
+    jumpVelY: 0,
+    jumpTimer: Math.random() * 5000 + 3000,
+    swayPhase: Math.random() * Math.PI * 2,
+    swaySpeed: 0.002 + Math.random() * 0.001
+});
 
-    // En öndeki (en büyük) - Tavuk
-    const isMob = isMobileView();
-    groundAnimals.push({
-        type: 'chicken',
-        x: 0.15,
-        y: isMob ? 0.69 : 0.75, // PC'de daha da aşağıda (0.72 -> 0.75)
-        size: (isMob ? 90 : 140) * gameScale, // PC'de daha büyük (90 -> 140)
-        state: 'static',
-        blinkTimer: Math.random() * 2000 + 1000,
-        isBlinking: false,
-        // Animasyon özellikleri
-        jumpY: 0,
-        jumpVelY: 0,
-        jumpTimer: Math.random() * 5000 + 4000,
-        swayPhase: Math.random() * Math.PI * 2,
-        swaySpeed: 0.002 + Math.random() * 0.001
-    });
+// En öndeki (en büyük) - Tavuk
+const isMob = isMobileView();
+groundAnimals.push({
+    type: 'chicken',
+    x: 0.15,
+    y: isMob ? 0.69 : 0.75, // PC'de daha da aşağıda (0.72 -> 0.75)
+    size: (isMob ? 90 : 140) * gameScale, // PC'de daha büyük (90 -> 140)
+    state: 'static',
+    blinkTimer: Math.random() * 2000 + 1000,
+    isBlinking: false,
+    // Animasyon özellikleri
+    jumpY: 0,
+    jumpVelY: 0,
+    jumpTimer: Math.random() * 5000 + 4000,
+    swayPhase: Math.random() * Math.PI * 2,
+    swaySpeed: 0.002 + Math.random() * 0.001
+});
 }
 
 function updateGroundAnimals(deltaTime) {
