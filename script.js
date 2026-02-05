@@ -1179,9 +1179,9 @@ class Pipe {
 
     updatePosition() {
         const isMob = isMobileView();
-        // PC ekranı için devasa büyüme (Tüpler ve her şey ~3 kat daha büyük)
-        const pScale = isMob ? gameScale : (gameScale * 2.8);
-        const xOffset = isMob ? 0.82 : 0.75; // Genişleyen boruyu sığdırmak için sola çektik
+        // PC ekranı için dengeli bir büyüme (Ortalama 1.5 kat)
+        const pScale = isMob ? gameScale : (gameScale * 1.5);
+        const xOffset = isMob ? 0.82 : 0.85;
         this.x = canvasWidth * xOffset;
 
         // Boyutları güncelle (pScale bazlı)
@@ -1194,8 +1194,8 @@ class Pipe {
         // Yükseklik limitleri ve dinamik hesaplama (Mobilde 2'şer hayvanlık boşluk bırakmak için)
         if (isMob) {
             const baseTotalHeight = canvasHeight / gameScale;
-            const yOffsetBase = -150; // Yukarıdaki boşluğu kapatmak için daha yukarıdan başlatıyoruz
-            const targetGapBase = 140; // 2 hayvanlık boşluk (2 * 70)
+            const yOffsetBase = -150;
+            const targetGapBase = 140;
             const midRingBase = 100;
 
             const totalRequiredGap = (targetGapBase * 2) + midRingBase;
@@ -1204,19 +1204,19 @@ class Pipe {
             this.upperHeight = (remainingForPipes * 0.45) * gameScale;
             this.lowerHeight = (remainingForPipes * 0.55) * gameScale;
             this.midHeight = midRingBase * gameScale;
-
-            const debugLabel = document.getElementById('debug-pivot');
-            if (debugLabel) {
-                const curText = debugLabel.textContent.split('|')[0] + '|' + debugLabel.textContent.split('|')[1];
-                debugLabel.textContent = `${curText} | PipeMob: true`;
-            }
         } else {
-            // PC için yükseklikler (pScale'e göre dengelendi)
-            const uHeight = 280; // Üstü biraz kısalttık ki gapler sığsın
-            const lHeight = 350;
-            this.upperHeight = uHeight * pScale;
-            this.midHeight = 80 * pScale;
-            this.lowerHeight = lHeight * pScale;
+            // PC için Dinamik Yükseklik (Ekrana sığması için hesaplamalı)
+            const baseTotalHeight = canvasHeight / pScale;
+            const yOffsetBase = -50; // PC'de üst boşluk daha az
+            const targetGapBase = 140;
+            const midRingBase = 100;
+
+            const totalRequiredGap = (targetGapBase * 2) + midRingBase;
+            const remainingForPipes = Math.max(200, baseTotalHeight - yOffsetBase - totalRequiredGap);
+
+            this.upperHeight = (remainingForPipes * 0.40) * pScale;
+            this.lowerHeight = (remainingForPipes * 0.60) * pScale;
+            this.midHeight = midRingBase * pScale;
         }
     }
 
