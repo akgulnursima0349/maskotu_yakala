@@ -1023,15 +1023,20 @@ class Gun {
     }
 
     updatePosition() {
-        // Ölçeklendirilmiş boyutlar
-        this.catcherWidth = this.baseCatcherWidth * gameScale;
-        this.catcherHeight = this.baseCatcherHeight * gameScale;
-        this.legWidth = this.baseLegWidth * gameScale;
-        this.legHeight = this.baseLegHeight * gameScale;
-
         // Pivot noktası
         const isMob = isMobileView();
-        // Catcher'ı PC'de sağa çekiyoruz (Mob: 0.18, PC: 0.28)
+        // Catcher Ölçeği (PC: 3x, Mob: 1x)
+        this.cScale = isMob ? gameScale : (gameScale * 3.0);
+        const cS = this.cScale;
+
+        // Ölçeklendirilmiş boyutlar
+        this.catcherWidth = this.baseCatcherWidth * cS;
+        this.catcherHeight = this.baseCatcherHeight * cS;
+        this.legWidth = this.baseLegWidth * cS;
+        this.legHeight = this.baseLegHeight * cS;
+
+        // Pivot noktası
+        // (isMob yukarıda tanımlandı)
         const xOffset = isMob ? 0.18 : 0.28;
         this.pivotX = canvasWidth * xOffset;
 
@@ -1063,14 +1068,16 @@ class Gun {
         ctx.save();
         ctx.translate(this.pivotX, this.pivotY);
 
+        const cS = this.cScale || gameScale;
+
         // 1. Bacak (çimene sabit, DÖNMEZ - Tam pivotun altına ortalandı)
         if (ASSETS.images.catcherLeg) {
             ctx.drawImage(
                 ASSETS.images.catcherLeg,
                 -this.legWidth / 2,
-                -15 * gameScale, // Biraz daha yukarı çekerek vidayla birleştirdik
+                -15 * cS, // Boyutla orantılı kaydırma
                 this.legWidth,
-                this.legHeight + (60 * gameScale)
+                this.legHeight + (60 * cS)
             );
         }
 
@@ -1079,33 +1086,33 @@ class Gun {
         ctx.rotate(this.rotation);
 
         // 3. Gövde (catcher.png) 
-        // Vidanın yerini tam tutturmak için gövdeyi sağa kaydırdık (-165 -> -95)
+        // Vidanın yerini tam tutturmak için gövdeyi orantılı kaydırdık
         if (ASSETS.images.catcher) {
             ctx.drawImage(
                 ASSETS.images.catcher,
-                -95 * gameScale,
-                -92 * gameScale,
+                -95 * cS,
+                -92 * cS,
                 this.catcherWidth,
                 this.catcherHeight
             );
         }
 
-        // 4. Pompa ve İp hizalaması (Gövdenin yeni yerine göre güncellendi)
-        const pWidth = 80 * gameScale;
-        const pHeight = 55 * gameScale;
+        // 4. Pompa ve İp hizalaması
+        const pWidth = 80 * cS;
+        const pHeight = 55 * cS;
 
-        // İp başlangıç noktası (Gövde sağa kayınca rStartX arttı: 5 -> 70)
-        const rStartX = 70 * gameScale;
-        const rY = -40 * gameScale; // Biraz aşağı indirildi (-48 -> -40)
+        // İp başlangıç noktası
+        const rStartX = 70 * cS;
+        const rY = -40 * cS;
 
-        const pX = rStartX + (50 * gameScale);
+        const pX = rStartX + (50 * cS);
         const pY = rY - (pHeight / 2);
 
         // Plunger aktif değilse pompa yerinde
         if (typeof plunger === 'undefined' || !plunger.active) {
             // Düz ip çiz
             ctx.strokeStyle = '#8B4513';
-            ctx.lineWidth = 3 * gameScale;
+            ctx.lineWidth = 3 * cS;
             ctx.beginPath();
             ctx.moveTo(rStartX, rY);
             ctx.lineTo(pX, rY);
@@ -1115,10 +1122,10 @@ class Gun {
             if (ASSETS.images.pump) {
                 ctx.drawImage(
                     ASSETS.images.pump,
-                    pX - (10 * gameScale),
+                    pX - (10 * cS),
                     pY,
-                    80 * gameScale,
-                    55 * gameScale
+                    80 * cS,
+                    55 * cS
                 );
             }
         }
@@ -1128,8 +1135,9 @@ class Gun {
 
     // Pompanın uç noktası (ateşleme başlangıcı)
     getPlungerStartPos() {
-        const pEndX = (70 + 50 + 70) * gameScale;
-        const pEndY = -40 * gameScale;
+        const cS = this.cScale || gameScale;
+        const pEndX = (70 + 50 + 70) * cS;
+        const pEndY = -40 * cS;
         const cosR = Math.cos(this.rotation);
         const sinR = Math.sin(this.rotation);
         return {
@@ -1140,8 +1148,9 @@ class Gun {
 
     // İpin başlangıç noktası (catcher gövdesinin önü)
     getRopeStartPos() {
-        const ropeStartX = 70 * gameScale;
-        const ropeStartY = -40 * gameScale;
+        const cS = this.cScale || gameScale;
+        const ropeStartX = 70 * cS;
+        const ropeStartY = -40 * cS;
         const cosR = Math.cos(this.rotation);
         const sinR = Math.sin(this.rotation);
         return {
