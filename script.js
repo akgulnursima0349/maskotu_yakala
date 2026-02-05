@@ -1313,24 +1313,26 @@ class Pipe {
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Kullanıcı isteği: Kenarlara doğru geniş (175) ve ince (50)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (175 * pS) / 2, upperY + this.upperHeight + (5 * gameScale), 175 * pS, 50 * pS);
+            // Kullanıcı isteği: Biraz daha daraltıldı (175 -> 155)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (155 * pS) / 2, upperY + this.upperHeight + (5 * gameScale), 155 * pS, 50 * pS);
         }
 
-        // 2. Orta yüzük ÜST eklemi (Sarı halka geri getirildi)
+        // 2. Orta yüzük ÜST eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            // Daha geniş (180) ve ince (50)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (180 * pS) / 2, midY - (5 * gameScale), 180 * pS, 50 * pS);
+            // Biraz daha daraltıldı (180 -> 160)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (160 * pS) / 2, midY - (5 * gameScale), 160 * pS, 50 * pS);
         }
 
-        // 3. Orta yüzük ALT eklemi (Sarı halka geri getirildi)
+        // 3. Orta yüzük ALT eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (180 * pS) / 2, midY + this.midHeight - (15 * gameScale), 180 * pS, 65 * pS);
+            // Biraz daha daraltıldı (180 -> 160)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (160 * pS) / 2, midY + this.midHeight - (15 * gameScale), 160 * pS, 65 * pS);
         }
 
         // 4. Alt tüp üst eklemi
         if (ASSETS.images.pipeMidUpperFront) {
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (185 * pS) / 2, lowerY - (8 * gameScale), 185 * pS, 70 * pS);
+            // Biraz daha daraltıldı (185 -> 165)
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (165 * pS) / 2, lowerY - (8 * gameScale), 165 * pS, 70 * pS);
         }
     }
 
