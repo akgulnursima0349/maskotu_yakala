@@ -1039,6 +1039,10 @@ class Gun {
         this.legHeight = this.baseLegHeight * legS;
         this.legS = legS; // Çizimde kullanmak için
 
+        // Pompa (pump.png) parçası PC'de biraz daha büyük olsun (Ekstra 1.4x)
+        const pumpS = isMob ? cS : (cS * 1.4);
+        this.pumpS = pumpS;
+
         // Pivot noktası
         // (isMob yukarıda tanımlandı)
         const xOffset = isMob ? 0.18 : 0.28;
