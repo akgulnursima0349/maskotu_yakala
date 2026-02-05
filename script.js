@@ -1202,9 +1202,10 @@ class Pipe {
     updatePosition() {
         const isMob = isMobileView();
         // PC ekranı için daha da büyütüldü (1.5 -> 1.8 kat)
-        const pScale = isMob ? gameScale : (gameScale * 1.8);
+        // Mobilde de artık daha büyük (gameScale -> gameScale * 1.3)
+        const pScale = isMob ? (gameScale * 1.3) : (gameScale * 1.8);
         this.pScale = pScale; // Diğer çizimlerde kullanmak için kaydet
-        const xOffset = isMob ? 0.82 : 0.81; // Büyüyen boru için ideal konum
+        const xOffset = isMob ? 0.83 : 0.81; // Boru kalınlaştığı için mobil ofseti hafif artırıldı
         this.x = canvasWidth * xOffset;
         this.canvasWidth = canvasWidth;
 
@@ -1334,31 +1335,30 @@ class Pipe {
 
         // ========================================
         // ADIM 4: TÜM ÖN PARÇALARI ÇİZ (EN ÜSTTE - HER ŞEYİN ÜSTÜNDE)
-        // ========================================
-        // pS yukarıda tanımlandı, tekrar tanımlamaya gerek yok
+        const pS = this.pScale || gameScale;
 
         // 1. Üst tüpün ALT kısmı eklemi
         if (ASSETS.images.pipeMidUpperFront) {
             // Kullanıcı isteği: Kenarlardan biraz daraltıldı (152 -> 142)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, upperY + this.upperHeight + (5 * gameScale), 142 * pS, 50 * pS);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, upperY + this.upperHeight + (5 * pS), 142 * pS, 50 * pS);
         }
 
         // 2. Orta yüzük ÜST eklemi
         if (ASSETS.images.pipeMidUpperFront) {
             // Kullanıcı isteği: Minicik daha daraltıldı (148 -> 142)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY - (5 * gameScale), 142 * pS, 52 * pS);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY - (5 * pS), 142 * pS, 52 * pS);
         }
 
         // 3. Orta yüzük ALT eklemi
         if (ASSETS.images.pipeMidUpperFront) {
             // Kullanıcı isteği: Aşağı doğru eni (yüksekliği) daraltıldı (64 -> 56)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY + this.midHeight - (15 * gameScale), 142 * pS, 56 * pS);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (142 * pS) / 2, midY + this.midHeight - (15 * pS), 142 * pS, 56 * pS);
         }
 
         // 4. Alt tüp üst eklemi
         if (ASSETS.images.pipeMidUpperFront) {
             // Kullanıcı isteği: Aşağı doğru eni (yüksekliği) daraltıldı (72 -> 62)
-            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (144 * pS) / 2, lowerY - (8 * gameScale), 144 * pS, 62 * pS);
+            ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (144 * pS) / 2, lowerY - (8 * pS), 144 * pS, 62 * pS);
         }
     }
 
