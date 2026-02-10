@@ -12,12 +12,12 @@ const CONFIG = {
     },
 
     // Fizik Ayarları
-    PLUNGER_SPEED: 12,      // Vantuz fırlatma hızı (yavaşlatıldı)
-    PLUNGER_RETURN_SPEED: 8, // Vantuz geri dönüş hızı (yavaşlatıldı)
+    PLUNGER_SPEED: 8,      // Vantuz fırlatma hızı (12 -> 8 Yavaşlatıldı)
+    PLUNGER_RETURN_SPEED: 5, // Vantuz geri dönüş hızı (8 -> 5 Yavaşlatıldı)
 
     // Görsel Ayarları
     GUN_ROTATION_RANGE: 25, // Tabanca rotasyon açısı (derece) - her iki gap'e ulaşabilecek
-    GUN_ROTATION_SPEED: 0.018, // Rotasyon hızı
+    GUN_ROTATION_SPEED: 0.005, // Rotasyon hızı (Daha da yavaşlatıldı - Sakin mod)
     BLINK_INTERVAL: 2000,   // Göz kırpma aralığı (ms)
     BLINK_DURATION: 200     // Göz kırpma süresi (ms)
 };
@@ -674,11 +674,14 @@ class Plunger {
         // Ateşleme açısını kaydet (tabanca açısı)
         this.fireAngle = gun.rotation;
 
-        // Hedefleri belirle (Vantuz ucu = this.x + 70)
-        this.targetGlassX = pipe.x - pipe.pipeWidth / 2; // Tüpün sol kenarı
-        this.targetAnimalX = pipe.x; // Tüpün ortası (hayvanlar)
+        // Hedefleri belirle (Vantuz ucu = this.x + 70*pS)
+        // Kullanıcı isteği: Tüpe tam sınırında/yakın dursun (+15 birim ileri)
+        this.targetGlassX = pipe.x - pipe.pipeWidth / 2 + (15 * gameScale);
 
-        // Mevcut hedef varsayılan olarak hayvandır, güncelleme sırasında cama çarpma kontrolü yapılır
+        // Kullanıcı isteği: Hayvanda ise biraz daha geride dursun (-8 birim geri)
+        this.targetAnimalX = pipe.x - (pipe.animalSize / 2) - (8 * gameScale);
+
+        // Mevcut hedef varsayılan olarak hayvandır
         this.targetX = this.targetAnimalX;
 
         console.log('Ateş!', 'Cisim-Hedef:', this.targetX, 'Cam-Hedef:', this.targetGlassX);
@@ -687,53 +690,57 @@ class Plunger {
     update() {
         if (!this.active) return;
 
-        // Tüpe yapışık durumda bekle
-        if (this.stuckOnPipe) {
-            this.stuckTimer -= 16; // ~60fps, her frame 16ms
+        // 1. Stuck State (Yapışık durumu) - EN ÖNCELİKLİ
+        if (this.stuckOnPipe && !this.returning) {
+            if (this.vibrationTimer > 0) this.vibrationTimer -= 16;
+            this.stuckTimer -= 16;
+
             if (this.stuckTimer <= 0) {
-                // Bekleme bitti, geri dön
-                console.log('Yapışma bitti, geri dönüş başlıyor');
-                this.stuckOnPipe = false;
                 this.returning = true;
+                this.isVibrating = false;
+                // BURADA HAYVANI BIRAKMA! (Taşıması için tutmaya devam et)
             }
-            return; // Yapışıkken başka işlem yapma
+            return;
         }
 
+        // 2. Forward Movement (İleri gidiş)
         if (!this.returning) {
-            // İleri hareket - ateşleme açısı yönünde
             this.x += Math.cos(this.fireAngle) * CONFIG.PLUNGER_SPEED;
             this.y += Math.sin(this.fireAngle) * CONFIG.PLUNGER_SPEED;
 
-            // Ekran sınırları kontrolü (Yukarı veya aşağı fırlayıp kaybolmasın)
-            if (this.y < -50 || this.y > canvasHeight + 50) {
+            // Ekran sınırları kontrolü
+            if (this.y < -100 || this.y > canvasHeight + 100 || this.x > canvasWidth + 100) {
                 this.startReturn();
                 return;
             }
 
-            // Vantuzun uç noktası (Görselde pumpX - 10 + 80 = this.x + 70*gameScale)
-            const tipX = this.x + (70 * gameScale);
+            const pS = gun.pumpS || gameScale;
+            const tipX = this.x + (70 * pS);
 
-            // Cam çarpışma kontrolü
+            // Çarpışma Kontrolü
             const inGap1 = this.y > pipe.gap1Start && this.y < pipe.gap1End;
             const inGap2 = this.y > pipe.gap2Start && this.y < pipe.gap2End;
 
             if (!inGap1 && !inGap2) {
-                // Cisim cam hizasına ulaştı mı?
-                if (tipX >= this.targetGlassX) {
-                    this.x = this.targetGlassX - (70 * gameScale); // Ucu tam cama yapıştır
-                    this.stickToPipe();
-                    return;
+                // Boru gövdesi veya halkalar (Dinamik Hedef)
+                // getHitX artık offset'i kendi içinde hesaplıyor (Halka: +35, Gövde: +55)
+                const hitX = pipe.getHitX(this.y);
+                if (tipX >= hitX) {
+                    this.x = hitX - (70 * pS);
+                    this.stickToPipe('pipe');
                 }
             } else {
-                // Boşluktayız, hayvanın oraya (merkeze) kadar git
+                // Hayvanlar bölgesi
                 if (tipX >= this.targetAnimalX) {
-                    this.x = this.targetAnimalX - (70 * gameScale); // Ucu tam merkeze getir
-                    this.stickToPipe();
-                    return;
+                    // Hayvanı ıskaladıysa duvara çarpıp dönsün (ya da boşluğa)
+                    // Ama burada sadece 'hizaya gelince dur' mantığı var
+                    this.x = this.targetAnimalX - (70 * pS);
+                    this.stickToPipe('miss'); // Boşa atış gibi davran
                 }
             }
-        } else {
-            // Geri dönüş - güncel gun pozisyonuna
+        }
+        // 3. Return Movement (Geri dönüş)
+        else {
             const gunPos = gun.getPlungerStartPos();
             const dx = gunPos.x - this.x;
             const dy = gunPos.y - this.y;
@@ -742,11 +749,27 @@ class Plunger {
             if (dist < CONFIG.PLUNGER_RETURN_SPEED) {
                 this.onReturnComplete();
             } else {
-                const speed = CONFIG.PLUNGER_RETURN_SPEED;
+                // Hayvan taşıyorsa YAVAŞ, boşsa HIZLI dön
+                let speed = CONFIG.PLUNGER_RETURN_SPEED;
+
+                if (this.caughtBall) {
+                    speed = CONFIG.PLUNGER_RETURN_SPEED * 0.3; // %30 hızda ağır ağır gel (Sürükleme hissi)
+
+                    // ORTA SAHADA BIRAKMA MANTIĞI
+                    // Ekranın tam ortasına (canvasWidth / 2) gelince bırak
+                    const releaseX = canvasWidth / 2;
+
+                    if (this.x < releaseX) {
+                        this.flyAwayAnimal(this.caughtBall);
+                        pipe.replaceBall(this.caughtBall);
+                        this.caughtBall = null; // Hayvanı bıraktı, artık boş dönebilir
+                    }
+                }
+
                 this.x += (dx / dist) * speed;
                 this.y += (dy / dist) * speed;
 
-                // Yakalanan topu da taşı
+                // Yakalanan topu da taşı (Eğer hala tutuyorsa)
                 if (this.caughtBall) {
                     this.caughtBall.drawX = this.x + (20 * gameScale);
                     this.caughtBall.drawY = this.y;
@@ -756,14 +779,25 @@ class Plunger {
     }
 
     // Tüpe yapış ve bekle
-    stickToPipe() {
-        // Zaten yapışıksa veya dönüyorsa tekrar yapışma
+    // type: 'pipe' | 'animal' | 'miss'
+    stickToPipe(type = 'pipe') {
         if (this.stuckOnPipe || this.returning) return;
 
         this.stuckOnPipe = true;
-        this.stuckTimer = 1200; // 1200ms tüpte yapışık kal
-        AUDIO_MANAGER.play('glassHit'); // Ses efekti eklendi
-        console.log('Vantuz tüpe yapıştı! Timer:', this.stuckTimer);
+
+        if (type === 'pipe') {
+            // TÜIP: Uzun bekleme ve titreşim
+            this.stuckTimer = 2500; // 2.5 saniye
+            this.vibrationTimer = 500;
+            this.isVibrating = true;
+            AUDIO_MANAGER.play('glassHit');
+            console.log('Tüpe yapıştı (Uzun & Titreşim)');
+        } else {
+            // HAYVAN: Hızlı dönüş (Titreşim yok, bekleme SIFIR)
+            this.stuckTimer = 0; // Hiç bekleme, direkt dön
+            this.vibrationTimer = 0; // Titreşim yok
+            this.isVibrating = false;
+        }
     }
 
     startReturn() {
@@ -804,14 +838,20 @@ class Plunger {
 
     // Hayvanı yukarı uçur (canvas tabanlı)
     flyAwayAnimal(ball) {
-        // Uçan hayvan listesine ekle
+        const pS = gun.pumpS || gameScale;
+        // Uçan hayvan listesine ekle - Pompanın tam ucundan başlat ama huninin içine göm
+        // 10*pS kadar içeri kaydırdık (sıkı yapışma görüntüsü için)
         flyingAnimals.push({
             type: ball.type,
-            x: this.x + (30 * gameScale),
+            x: this.x + (70 * pS) - (10 * pS),
             y: this.y,
             startY: this.y,
             opacity: 1,
             scale: 1,
+            vx: (Math.random() - 0.5) * 2,
+            vy: -6, // Yavaş uçuş (-10 -> -6)
+            rotation: 0,
+            rotSpeed: (Math.random() - 0.5) * 0.2,
             time: 0
         });
     }
@@ -820,8 +860,8 @@ class Plunger {
         this.caughtBall = ball;
         ball.state = 'confused';
         ball.caught = true;
-        AUDIO_MANAGER.play('catch'); // Ses efekti eklendi
-        this.stickToPipe();  // Önce yapış, sonra geri çek
+        AUDIO_MANAGER.play('catch');
+        this.stickToPipe('animal');  // Hayvan modunda yapış
     }
 
     draw() {
@@ -830,26 +870,46 @@ class Plunger {
         // İp çizimi (Catcher gövdesinin önünden Plunger'a)
         const ropeStart = gun.getRopeStartPos();
         ctx.strokeStyle = '#8B4513';
-        ctx.lineWidth = 3 * gameScale;
+        ctx.lineWidth = 6 * gameScale; // Kalın ip
         ctx.beginPath();
         ctx.moveTo(ropeStart.x, ropeStart.y);
-        ctx.lineTo(this.x, this.y);
+
+        // SARKMA EFEKTİ (Quadratic Curve)
+        const midX = (ropeStart.x + this.x) / 2;
+        const midY = (ropeStart.y + this.y) / 2;
+        const dist = Math.hypot(this.x - ropeStart.x, this.y - ropeStart.y);
+
+        // Mesafe arttıkça sarkma artar (0.15 katsayısı yerçekimi hissi verir)
+        const sag = dist * 0.15;
+
+        ctx.quadraticCurveTo(midX, midY + sag, this.x, this.y);
         ctx.stroke();
 
-        // Pompa (pump.png)
+        // ADIM 1: Pompa (pump.png) - Altta kalsın diye önce çiziyoruz
         if (ASSETS.images.pump) {
-            const pWidth = 80 * gameScale;
-            const pHeight = 55 * gameScale;
+            // Kullanıcı isteği: Pompa küçülmesin, tabancadaki ölçeği (gun.pumpS) korusun
+            const pS = gun.pumpS || gameScale;
+            const pWidth = 80 * pS;
+            const pHeight = 55 * pS;
+
+            // Titreşim ofseti
+            let offX = 0;
+            let offY = 0;
+            if (this.isVibrating && this.vibrationTimer > 0) {
+                offX = (Math.random() - 0.5) * 4 * gameScale;
+                offY = (Math.random() - 0.5) * 4 * gameScale;
+            }
+
             ctx.drawImage(
                 ASSETS.images.pump,
-                this.x - (10 * gameScale),
-                this.y - pHeight / 2,
+                this.x - (10 * pS) + offX,
+                this.y - pHeight / 2 + offY,
                 pWidth,
                 pHeight
             );
         }
 
-        // Yakalanan hayvanı pompanın ucunda çiz (yapışık veya dönüş sırasında)
+        // ADIM 2: Yakalanan hayvanı çiz (Pompanın/Huninin üstünde görünsün diye sonra çiziyoruz)
         if (this.caughtBall && (this.stuckOnPipe || this.returning)) {
             this.drawCaughtAnimal();
         }
@@ -873,9 +933,12 @@ class Plunger {
         }
 
         if (img) {
-            const size = 60 * gameScale;
-            // Pompanın ucunda çiz (pWidth = 80)
-            ctx.drawImage(img, this.x + (60 * gameScale), this.y - size / 2, size, size);
+            // Kullanıcı isteği: Boyut küçülmesin, borudaki boyutunu (pipe.animalSize) korusun
+            const size = pipe.animalSize;
+            const pS = gun.pumpS || gameScale;
+            // Pompanın tam ucundan 10 birim (pS ölçekli) içeri çiziyoruz
+            // Böylece huni ağzı hayvanı hafifçe kavramış görünüyor (sıkı yapışma)
+            ctx.drawImage(img, this.x + (70 * pS) - (10 * pS), this.y - size / 2, size, size);
         }
     }
 
@@ -884,16 +947,17 @@ class Plunger {
         if (this.stuckOnPipe || this.returning || !this.active) return;
 
         // Canvas tabanlı collision - ucu (tip) esas al
+        const pS = gun.pumpS || gameScale;
         for (let ball of balls) {
             if (ball.caught) continue;
 
-            // Mesafe hesapla (Vantuzun ucu: this.x + 70*gameScale)
-            const dx = (this.x + (70 * gameScale)) - ball.drawX;
+            // Mesafe hesapla (Vantuzun ucu)
+            const dx = (this.x + (70 * pS)) - ball.drawX;
             const dy = this.y - ball.drawY;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            // Çarpışma kontrolü (Hayvan boyutu animalSize=75*gameScale olduğu için orantılı)
-            if (dist < (60 * gameScale)) {
+            // Çarpışma kontrolü (pS ölçekli huniye göre mesafe)
+            if (dist < (60 * pS)) {
                 // Sadece yakalanabilir (gap bölgesindeki) hayvanlar yakalanır
                 if (ball.catchable) {
                     this.catchBall(ball);
@@ -1121,12 +1185,14 @@ class Gun {
 
         // Plunger aktif değilse pompa yerinde
         if (typeof plunger === 'undefined' || !plunger.active) {
-            // Düz ip çiz
+            // Hafif sarkık ip çiz (Idle durumu) -> KULLANICI İSTEĞİ: DÜMDÜZ olsun
             ctx.strokeStyle = '#8B4513';
-            ctx.lineWidth = 3 * cS;
+            ctx.lineWidth = 6 * cS;
             ctx.beginPath();
-            ctx.moveTo(rStartX, rY);
-            ctx.lineTo(pX, rY);
+            // İp başlangıcını hafif aşağı al (Sapın tam arkasına denk gelmesi için)
+            const alignY = rY + (2 * cS);
+            ctx.moveTo(rStartX, alignY);
+            ctx.lineTo(pX, alignY);
             ctx.stroke();
 
             // Pompa (pump.png)
@@ -1134,7 +1200,7 @@ class Gun {
                 ctx.drawImage(
                     ASSETS.images.pump,
                     pX - (10 * cS),
-                    pY,
+                    pY + (2 * cS), // Pompayı hafif yukarı al (+2) - İnce ayar
                     pWidth,
                     pHeight
                 );
@@ -1147,10 +1213,9 @@ class Gun {
     // Pompanın uç noktası (ateşleme başlangıcı)
     getPlungerStartPos() {
         const cS = this.cScale || gameScale;
-        const pumpS = this.pumpS || cS;
-        // Pompaya göre hizalama (70 gövde + 50 ara + 70 pompa ucu)
-        const pEndX = (70 * cS) + (50 * cS) + (70 * pumpS);
-        const pEndY = -40 * cS;
+        // İp çıkış noktası: Tam sapın arkası
+        const pEndX = (70 * cS); // İpin çıktığı yer
+        const pEndY = -40 * cS + (2 * cS); // Y ekseninde az aşağı kaydır (+2) - İp sabit
         const cosR = Math.cos(this.rotation);
         const sinR = Math.sin(this.rotation);
         return {
@@ -1360,6 +1425,45 @@ class Pipe {
             // Kullanıcı isteği: Aşağı doğru eni (yüksekliği) daraltıldı (72 -> 62)
             ctx.drawImage(ASSETS.images.pipeMidUpperFront, x - (144 * pS) / 2, lowerY - (8 * pS), 144 * pS, 62 * pS);
         }
+    }
+
+    // Pozisyona göre vuruş yapılacak X koordinatını dön (Halka mı, gövde mi?)
+    getHitX(y) {
+        const pS = this.pScale || gameScale;
+        const w = this.pipeWidth;
+        const x = this.x;
+
+        const isMob = isMobileView();
+        const yOffset = isMob ? -150 : -80;
+        const upperY = yOffset * gameScale;
+        const lowerY = canvasHeight - this.lowerHeight;
+        const upperEnd = upperY + this.upperHeight;
+        const gapSize = lowerY - upperEnd;
+        const midShift = isMob ? 0 : (25 * pS);
+        const midY = upperEnd + (gapSize - this.midHeight) / 2 + midShift;
+
+        // Halkaların Y aralıklarını kontrol et
+        const rings = [
+            { y: upperY + this.upperHeight + (5 * pS), h: 50 * pS, w: 142 * pS },
+            { y: midY - (5 * pS), h: 52 * pS, w: 142 * pS },
+            { y: midY + this.midHeight - (8 * pS), h: 56 * pS, w: 142 * pS },
+            { y: lowerY - (8 * pS), h: 62 * pS, w: 144 * pS }
+        ];
+
+        for (let ring of rings) {
+            // Halka algılamasını daralt (Sadece tam ortasına gelirse halka saysın)
+            // Kenarlarına gelirse "Gövde" saysın ki içeri daha çok gömülsün
+            const safeZone = ring.h * 0.2;
+            if (y >= ring.y + safeZone && y <= ring.y + ring.h - safeZone) {
+                // Halka kenarı - HALKA OFFSET (+35)
+                return (x - ring.w / 2) + (35 * gameScale);
+            }
+        }
+
+        // Normal gövde kenarı - MERKEZE KİLİTLEME (BOŞLUKSUZ)
+        // Kenar falan hesaplama, direkt borunun tam ortasına (bu.x) yapıştır.
+        // Böylece pompa borunun içine kadar girer ve arada boşluk kalma ihtimali SIFIR olur.
+        return this.x;
     }
 
     // Belirli bölümdeki hayvanları çiz
@@ -2047,7 +2151,9 @@ function updateAndDrawFlyingAnimals(deltaTime) {
         // Animasyon güncelle (yavaşlatıldı)
         animal.time += deltaTime;
         animal.y = animal.startY - (animal.time * 0.15); // Yukarı uç (yavaş)
-        animal.scale = 1 + (animal.time / 2000) * 0.5; // Büyü (yavaş)
+
+        // Kullanıcı isteği: Boyut sabit kalsın, büyüme/küçülme olmasın
+        animal.scale = 1;
         animal.opacity = 1 - (animal.time / 2500); // Soluklaş (yavaş)
 
         // Animasyon bittiyse kaldır
@@ -2069,7 +2175,8 @@ function updateAndDrawFlyingAnimals(deltaTime) {
             ctx.globalAlpha = animal.opacity;
             ctx.translate(animal.x, animal.y);
             ctx.scale(animal.scale, animal.scale);
-            const size = 60 * gameScale;
+            // Boyut borudaki orijinal boyut olsun
+            const size = pipe.animalSize;
             ctx.drawImage(img, -size / 2, -size / 2, size, size);
             ctx.restore();
         }
