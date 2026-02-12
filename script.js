@@ -1836,6 +1836,7 @@ function showQuestion() {
     shuffledAnswers.forEach((answer) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
+        btn.dataset.isCorrect = answer.correct; // Doğru şıkkı gizli bir veri etiketiyle işaretle
 
         if (answer.image) {
             const img = document.createElement('img');
@@ -1952,9 +1953,7 @@ function handleAnswer(answer, btn) {
 
         // Doğru cevabı göster
         document.querySelectorAll('.answer-btn').forEach(b => {
-            const text = b.querySelector('span').textContent;
-            const correctAnswer = GameState.currentQuestion.answers.find(a => a.correct);
-            if (text === correctAnswer.text) {
+            if (b.dataset.isCorrect === "true") {
                 b.classList.add('correct');
             }
         });
