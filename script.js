@@ -1117,11 +1117,7 @@ class Gun {
         const pivotPct = isMob ? 0.62 : 0.68;
         this.pivotY = canvasHeight * pivotPct;
 
-        // Debug bilgisi
-        const debugLabel = document.getElementById('debug-pivot');
-        if (debugLabel) {
-            debugLabel.textContent = `Y: ${Math.round(pivotPct * 100)}% | Mob: ${isMob}`;
-        }
+
     }
 
     update() {
