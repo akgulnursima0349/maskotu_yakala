@@ -760,6 +760,13 @@ class Plunger {
                     const releaseX = canvasWidth / 2;
 
                     if (this.x < releaseX) {
+                        // Hayvan tipine göre puan ekle
+                        const points = CONFIG.POINTS[this.caughtBall.type];
+                        GameState.score += points;
+                        GameState.successfulCatches++;
+                        showPointsPopup(points, this.x, this.y);
+                        updateUI();
+
                         this.flyAwayAnimal(this.caughtBall);
                         pipe.replaceBall(this.caughtBall);
                         this.caughtBall = null; // Hayvanı bıraktı, artık boş dönebilir
@@ -805,32 +812,11 @@ class Plunger {
     }
 
     onReturnComplete() {
-        if (this.caughtBall) {
-            // Başarılı yakalama
-            const points = CONFIG.POINTS[this.caughtBall.type];
-            GameState.score += points;
-            GameState.successfulCatches++;
-            updateUI();
-
-            // Puan popup'ı göster (Global fonksiyon kullanılıyor)
-            showPointsPopup(points, this.x, this.y);
-
-            // Hayvanı uçur (yukarı kaybolacak)
-            this.flyAwayAnimal(this.caughtBall);
-
-            // Tüpteki hayvanı yenisiyle değiştir (akıcı aşağı akış için)
-            pipe.replaceBall(this.caughtBall);
-
-            // Yeni tura geç
-            setTimeout(() => {
-                nextRound();
-            }, 800);
-        } else {
-            // Iskalama - Yeni tura geç (Kullanıcı isteği: Farklı soru sorsun)
-            setTimeout(() => {
-                nextRound();
-            }, 300);
-        }
+        // Not: Başarılı yakalamada puan, orta sahada bırakma anında ekleniyor (update metodu).
+        // Iskalama veya tamamlanmış yakalama - Yeni tura geç
+        setTimeout(() => {
+            nextRound();
+        }, 300);
 
         this.reset();
         GameState.isShooting = false;
@@ -1173,10 +1159,10 @@ class Gun {
         const pHeight = 55 * pumpS;
 
         // İp başlangıç noktası
-        const rStartX = 70 * cS;
+        const rStartX = 62 * cS;
         const rY = -40 * cS;
 
-        const pX = rStartX + (50 * cS);
+        const pX = (70 * cS) + (50 * cS); // Pompa sabit konumda kalır
         const pY = rY - (pHeight / 2);
 
         // Plunger aktif değilse pompa yerinde
@@ -1223,7 +1209,7 @@ class Gun {
     // İpin başlangıç noktası (catcher gövdesinin önü)
     getRopeStartPos() {
         const cS = this.cScale || gameScale;
-        const ropeStartX = 70 * cS;
+        const ropeStartX = 62 * cS;
         const ropeStartY = -40 * cS;
         const cosR = Math.cos(this.rotation);
         const sinR = Math.sin(this.rotation);
