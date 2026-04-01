@@ -688,8 +688,8 @@ body {
     gap: 15px;
 }
 
-/* 3 şıkta son buton ortalanır; 4 şık eklenirse otomatik normal grile döner */
-.answer-btn:last-child:nth-child(odd) {
+/* 3 şıkta son wrapper ortalanır; 4 şık eklenirse otomatik normal grile döner */
+.answer-wrapper:last-child:nth-child(odd) {
     grid-column: 1 / -1;
     max-width: 50%;
     margin: 0 auto;
@@ -737,6 +737,72 @@ body {
 .answer-btn:disabled {
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+/* Cevap wrapper: answer-btn + opsiyonel ses butonu */
+.answer-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.answer-wrapper .answer-btn {
+    flex: 1;
+}
+
+/* Cevap ses butonu (wrapper içinde, answer-btn'in altında) */
+.answer-audio-btn {
+    align-self: center;
+    background: none;
+    border: 2px solid #90CAF9;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    line-height: 1;
+}
+.answer-audio-btn:hover {
+    background: #E3F2FD;
+    border-color: #2196F3;
+}
+.answer-audio-btn.playing {
+    background: #2196F3;
+    border-color: #2196F3;
+    color: white;
+}
+
+/* Soru ses butonları alanı */
+#question-audio-area {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+/* Soru ses butonu */
+.question-audio-btn {
+    background: none;
+    border: 2px solid #90CAF9;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+}
+.question-audio-btn:hover {
+    background: #E3F2FD;
+    border-color: #2196F3;
+}
+.question-audio-btn.playing {
+    background: #2196F3;
+    border-color: #2196F3;
+    color: white;
 }
 
 #feedback-container,

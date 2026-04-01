@@ -4,100 +4,120 @@
       "id": 1,
       "text": "n, o, a, t, l, harfleri ile hangi sözcük yazılamaz?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "ton", "image": null, "correct": false },
-        { "text": "Onat", "image": null, "correct": false },
-        { "text": "net", "image": null, "correct": true }
+        { "text": "ton",  "image": null, "audio": null, "correct": false },
+        { "text": "Onat", "image": null, "audio": null, "correct": false },
+        { "text": "net",  "image": null, "audio": null, "correct": true  }
       ]
     },
     {
       "id": 2,
       "text": "Hecelerine doğru şekilde ayrılan sözcük hangisidir?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Hal-ay", "image": null, "correct": false },
-        { "text": "La-ha-na", "image": null, "correct": true },
-        { "text": "Ti-ms-ah", "image": null, "correct": false }
+        { "text": "Hal-ay",   "image": null, "audio": null, "correct": false },
+        { "text": "La-ha-na", "image": null, "audio": null, "correct": true  },
+        { "text": "Ti-ms-ah", "image": null, "audio": null, "correct": false }
       ]
     },
     {
       "id": 3,
       "text": "geziye, dün, gitti, Gül sözcükleri ile oluşturulabilecek anlamlı ve kurallı cümle hangisidir?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Gül gitti geziye dün.", "image": null, "correct": false },
-        { "text": "Gül geziye gitti dün.", "image": null, "correct": false },
-        { "text": "Gül dün geziye gitti.", "image": null, "correct": true }
+        { "text": "Gül gitti geziye dün.",  "image": null, "audio": null, "correct": false },
+        { "text": "Gül geziye gitti dün.",  "image": null, "audio": null, "correct": false },
+        { "text": "Gül dün geziye gitti.", "image": null, "audio": null, "correct": true  }
       ]
     },
     {
       "id": 4,
       "text": "Hangi seçenekteki cümlede sözcük sayısı diğerlerinden fazladır?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Ezel denizde iyi yüzer.", "image": null, "correct": false },
-        { "text": "sezin odanı düzenle.", "image": null, "correct": false },
-        { "text": "Ozan salataya tuz attı.", "image": null, "correct": true }
+        { "text": "Ezel denizde iyi yüzer.", "image": null, "audio": null, "correct": false },
+        { "text": "sezin odanı düzenle.",    "image": null, "audio": null, "correct": false },
+        { "text": "Ozan salataya tuz attı.", "image": null, "audio": null, "correct": true  }
       ]
     },
     {
       "id": 5,
       "text": "Hangi seçenekteki cümlede sözcük sayısı diğerlerinden fazladır?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Arabanın ön tekeri indi.", "image": null, "correct": false },
-        { "text": "Ege maçta üç gol attı.", "image": null, "correct": true },
-        { "text": "Gamze etek giydi.", "image": null, "correct": false }
+        { "text": "Arabanın ön tekeri indi.", "image": null, "audio": null, "correct": false },
+        { "text": "Ege maçta üç gol attı.",  "image": null, "audio": null, "correct": true  },
+        { "text": "Gamze etek giydi.",        "image": null, "audio": null, "correct": false }
       ]
     },
     {
       "id": 6,
       "text": "Hecelerine doğru şekilde ayrılan sözcük hangisidir?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "ömürlük, öm-ür-lük", "image": null, "correct": false },
-        { "text": "önemli, önem-li", "image": null, "correct": false },
-        { "text": "kömürlük, kö-mür-lük", "image": null, "correct": true }
+        { "text": "ömürlük, öm-ür-lük",   "image": null, "audio": null, "correct": false },
+        { "text": "önemli, önem-li",       "image": null, "audio": null, "correct": false },
+        { "text": "kömürlük, kö-mür-lük", "image": null, "audio": null, "correct": true  }
       ]
     },
     {
       "id": 7,
       "text": "Hecelerine doğru şekilde ayrılan sözcük hangisidir?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Gü-ver-cin", "image": null, "correct": true },
-        { "text": "El-div-en", "image": null, "correct": false },
-        { "text": "Tav-uk", "image": null, "correct": false }
+        { "text": "Gü-ver-cin", "image": null, "audio": null, "correct": true  },
+        { "text": "El-div-en",  "image": null, "audio": null, "correct": false },
+        { "text": "Tav-uk",     "image": null, "audio": null, "correct": false }
       ]
     },
     {
       "id": 8,
       "text": "Onur, karala, kartonu, renkli sözcükleri ile yazılabilecek anlamlı ve kurallı cümle hangisidir?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Karala renkli kartonu Onur.", "image": null, "correct": false },
-        { "text": "Onur renkli kartonu karala.", "image": null, "correct": true },
-        { "text": "Kartonu karala renkli Onur.", "image": null, "correct": false }
+        { "text": "Karala renkli kartonu Onur.", "image": null, "audio": null, "correct": false },
+        { "text": "Onur renkli kartonu karala.", "image": null, "audio": null, "correct": true  },
+        { "text": "Kartonu karala renkli Onur.", "image": null, "audio": null, "correct": false }
       ]
     },
     {
       "id": 9,
       "text": "Hangi seçenekteki cümlede sözcük sayısı diğerlerinden fazladır?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Kedim Duman mama yedi.", "image": null, "correct": true },
-        { "text": "Babam börek yedi.", "image": null, "correct": false },
-        { "text": "Burak dondurma istedi.", "image": null, "correct": false }
+        { "text": "Kedim Duman mama yedi.", "image": null, "audio": null, "correct": true  },
+        { "text": "Babam börek yedi.",      "image": null, "audio": null, "correct": false },
+        { "text": "Burak dondurma istedi.", "image": null, "audio": null, "correct": false }
       ]
     },
     {
       "id": 10,
       "text": "Hangi seçenekteki cümlede hece sayısı diğerlerinden fazladır?",
       "image": null,
+      "audio": null,
+      "audio_parts": null,
       "answers": [
-        { "text": "Yusuf'un fırçası kırıldı.", "image": null, "correct": false },
-        { "text": "Furkan teneffüste iki şeftali yedi.", "image": null, "correct": true },
-        { "text": "Ferhat bal kaymak yedi.", "image": null, "correct": false }
+        { "text": "Yusuf'un fırçası kırıldı.",              "image": null, "audio": null, "correct": false },
+        { "text": "Furkan teneffüste iki şeftali yedi.", "image": null, "audio": null, "correct": true  },
+        { "text": "Ferhat bal kaymak yedi.",               "image": null, "audio": null, "correct": false }
       ]
     }
   ]

@@ -151,6 +151,10 @@ const AUDIO_MANAGER = {
         celebration: 'sounds/celebration.mp3'
     },
 
+    // O an çalan soru/cevap sesi
+    currentQuestionAudio: null,
+    currentAudioBtn: null,
+
     init() {
         for (const [key, path] of Object.entries(this.manifest)) {
             const audio = new Audio(path);
@@ -164,6 +168,34 @@ const AUDIO_MANAGER = {
         if (sound) {
             sound.currentTime = 0; // Baştan çal
             sound.play().catch(e => console.warn(`Ses çalınamadı (${key}):`, e.message));
+        }
+    },
+
+    // Soru/cevap sesi çal (src: dosya yolu, btn: ses butonu elementi)
+    playQuestionAudio(src, btn) {
+        this.stopQuestionAudio();
+        const audio = new Audio(src);
+        this.currentQuestionAudio = audio;
+        this.currentAudioBtn = btn;
+        btn.classList.add('playing');
+        audio.play().catch(e => console.warn('Soru sesi çalınamadı:', e.message));
+        audio.addEventListener('ended', () => {
+            btn.classList.remove('playing');
+            this.currentQuestionAudio = null;
+            this.currentAudioBtn = null;
+        });
+    },
+
+    // Çalan soru sesini durdur
+    stopQuestionAudio() {
+        if (this.currentQuestionAudio) {
+            this.currentQuestionAudio.pause();
+            this.currentQuestionAudio.currentTime = 0;
+            this.currentQuestionAudio = null;
+        }
+        if (this.currentAudioBtn) {
+            this.currentAudioBtn.classList.remove('playing');
+            this.currentAudioBtn = null;
         }
     }
 };
@@ -1800,6 +1832,9 @@ function showQuestion() {
     const answersContainer = document.getElementById('answers-container');
     const feedbackContainer = document.getElementById('feedback-container');
 
+    // Önceki sorudan kalan ses varsa durdur
+    AUDIO_MANAGER.stopQuestionAudio();
+
     // Soruyu göster
     questionText.textContent = GameState.currentQuestion.text;
 
@@ -1811,14 +1846,44 @@ function showQuestion() {
         questionImageContainer.appendChild(img);
     }
 
+    // Soru ses butonlarını oluştur (audio_parts > audio, ikisi de yoksa alan boş)
+    const questionAudioArea = document.getElementById('question-audio-area');
+    questionAudioArea.innerHTML = '';
+    const audioParts = GameState.currentQuestion.audio_parts;
+    const audioSingle = GameState.currentQuestion.audio;
+    if (audioParts && audioParts.length > 0) {
+        // Birden fazla konuşma balonu: her biri için ayrı numarlı buton
+        audioParts.forEach((src, i) => {
+            if (!src) return;
+            const btn = document.createElement('button');
+            btn.className = 'question-audio-btn';
+            btn.title = `${i + 1}. balonu dinle`;
+            btn.textContent = audioParts.length > 1 ? `🔊${i + 1}` : '🔊';
+            btn.addEventListener('click', () => AUDIO_MANAGER.playQuestionAudio(src, btn));
+            questionAudioArea.appendChild(btn);
+        });
+    } else if (audioSingle) {
+        // Tek ses butonu
+        const btn = document.createElement('button');
+        btn.className = 'question-audio-btn';
+        btn.title = 'Soruyu dinle';
+        btn.textContent = '🔊';
+        btn.addEventListener('click', () => AUDIO_MANAGER.playQuestionAudio(audioSingle, btn));
+        questionAudioArea.appendChild(btn);
+    }
+
     // Cevapları oluştur
     answersContainer.innerHTML = '';
     const shuffledAnswers = shuffleArray([...GameState.currentQuestion.answers]);
 
     shuffledAnswers.forEach((answer) => {
+        // Her cevap bir wrapper içinde (grid ve ortalama tutarlı kalır)
+        const wrapper = document.createElement('div');
+        wrapper.className = 'answer-wrapper';
+
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
-        btn.dataset.isCorrect = answer.correct; // Doğru şıkkı gizli bir veri etiketiyle işaretle
+        btn.dataset.isCorrect = answer.correct;
 
         if (answer.image) {
             const img = document.createElement('img');
@@ -1831,7 +1896,19 @@ function showQuestion() {
         btn.appendChild(text);
 
         btn.addEventListener('click', () => handleAnswer(answer, btn));
-        answersContainer.appendChild(btn);
+        wrapper.appendChild(btn);
+
+        // Cevap ses butonu — yalnızca ses dosyası tanımlanmışsa
+        if (answer.audio) {
+            const audioBtn = document.createElement('button');
+            audioBtn.className = 'answer-audio-btn';
+            audioBtn.textContent = '🔊';
+            audioBtn.title = 'Cevabı dinle';
+            audioBtn.addEventListener('click', () => AUDIO_MANAGER.playQuestionAudio(answer.audio, audioBtn));
+            wrapper.appendChild(audioBtn);
+        }
+
+        answersContainer.appendChild(wrapper);
     });
 
     // Feedback'i gizle
@@ -1956,6 +2033,7 @@ function handleTimeout() {
 }
 
 function hideQuestionModal() {
+    AUDIO_MANAGER.stopQuestionAudio();
     document.getElementById('question-modal').classList.remove('active');
 }
 
